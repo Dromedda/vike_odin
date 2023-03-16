@@ -16,6 +16,8 @@ Entity :: struct {
  init: proc(self:^Entity),
  update: proc(self:^Entity),
  draw: proc(self:^Entity),
+ // sprites: []Sprite,
+ // sprite: Sprite, 
 }
 
 Scene :: struct {
