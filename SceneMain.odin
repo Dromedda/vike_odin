@@ -11,7 +11,7 @@ SceneMain : Scene = {
 
 	update = proc() {
 		player.update(&player)
-		if (vikr(r.KeyboardKey.F1)) {
+		if (vkeyr(r.KeyboardKey.F1)) {
 			vGotoScene("test")
 		}
 	},
@@ -33,7 +33,7 @@ SceneTest : Scene = {
 		log("SCENE TEST LOADED")
 	},
 	update = proc() {
-		if (vikr(r.KeyboardKey.F1)) {
+		if (vkeyr(r.KeyboardKey.F1)) {
 			vGotoScene("main")
 		}
 	},

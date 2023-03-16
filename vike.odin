@@ -2,7 +2,6 @@ package main
 import r "vendor:raylib"
 import "core:fmt"
 
-// CONSTANTS
 MAX_ENTITIES :: 200
 MAX_SCENES :: 4
 
@@ -27,9 +26,6 @@ Scene :: struct {
  end: proc(),
 }
 
-
-// Ends the current scene, and loads the new one
-// if it was found in the game struct, otherwise an assert happens :)
 vGotoScene :: proc(id: string) -> Scene {
  ret : Scene
  for scene in game.scenes {
@@ -49,52 +45,25 @@ vGotoScene :: proc(id: string) -> Scene {
 
 // -- Random Utils
 
-// TODO: This will only work on strings
-// checkout typeids
+// TODO: fix pls 
 log :: proc(str:string) {
  fmt.println("VIKE::LOG::", str)
 }
 
 // --- Keyboard Input wrappers
-/*
- instead of:
- if(r.IsKeyDown(r.KeyboardKey.A)) {
- }
 
- These funcs help us make it: 
- if (vik(key(a))) {
- }
-*/
-
-// TODO: return the r.KeyboardKey val of the char provided
 vk :: proc (k:string) {
  assert(false, "Not Implemented yet")
 }
 
-/// Returns true of the key is pressed
-vikp :: proc(key: r.KeyboardKey) -> bool {
-// TODO: there is a probs a way to do ternaries
- if (r.IsKeyPressed(key)) {
-  return true
- }
- return false
+vkeyp :: proc(key: r.KeyboardKey) -> bool {
+ return r.IsKeyPressed(key)
 }
 
-
-/// Returns true of the key is released
-vikr :: proc(key: r.KeyboardKey) -> bool {
-// TODO: there is a probs a way to do ternaries
- if (r.IsKeyReleased(key)) {
-  return true
- }
- return false
+vkeyr :: proc(key: r.KeyboardKey) -> bool {
+ return r.IsKeyReleased(key)
 }
 
-// Returns true if the key is down
-vik :: proc(key: r.KeyboardKey) -> bool {
-// TODO: there is a probs a way to do ternaries
- if (r.IsKeyDown(key)) {
-  return true
- }
- return false
+vkeyd :: proc(key: r.KeyboardKey) -> bool {
+ return r.IsKeyDown(key)
 }

@@ -14,8 +14,8 @@ player:Entity = {
 
 	update = proc(self:^Entity) {
 		speed:i32 = 4
-		self.x += (i32(vik(r.KeyboardKey.D)) - i32(vik(r.KeyboardKey.A))) * speed
-		self.y += (i32(vik(r.KeyboardKey.S)) - i32(vik(r.KeyboardKey.W))) * speed
+		self.x += (i32(vkeyd(r.KeyboardKey.D)) - i32(vkeyd(r.KeyboardKey.A))) * speed
+		self.y += (i32(vkeyd(r.KeyboardKey.S)) - i32(vkeyd(r.KeyboardKey.W))) * speed
 	},
 
 	draw = proc(self:^Entity) {
