@@ -2,6 +2,12 @@ package main
 import r "vendor:raylib"
 import f "core:fmt"
 
+@(private="file")
+PlayerSpeed: f64 = 5
+
+@(private="file")
+SprintMultiplier: f64 = 2.4
+
 player : Entity = {
 	x = 200,
 	y = 200,
@@ -17,16 +23,20 @@ PlayerInit :: proc(self: ^Entity) {
 }
 
 PlayerUpdate :: proc(self: ^Entity) {
-	speed:f64 = 4
-	
+	spd:= PlayerSpeed
 	moveX := (i32(vkeyd(r.KeyboardKey.D)) - i32(vkeyd(r.KeyboardKey.A)))
 	moveY := (i32(vkeyd(r.KeyboardKey.S)) - i32(vkeyd(r.KeyboardKey.W)))
 
-	// Normalize if we are moving diagonally
-	if (moveX != 0 && moveY != 0) { speed = speed * 0.8 }
+	// Sprinting
+	if (vkeyd(r.KeyboardKey.LEFT_SHIFT)) {
+		spd = spd * SprintMultiplier
+	}
 
-	self.x += moveX * i32(speed); 
-	self.y += moveY * i32(speed); 
+	// Normalize if we are moving diagonally
+	if (moveX != 0 && moveY != 0) { spd = spd * 0.8 }
+
+	self.x += moveX * i32(spd); 
+	self.y += moveY * i32(spd); 
 }
 
 PlayerDraw :: proc(self: ^Entity) {
