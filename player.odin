@@ -20,6 +20,7 @@ player : Entity = {
 
 PlayerInit :: proc(self: ^Entity) {
 	log("CREATED PLAYER")
+	player.sprite = vLoadTexture2d("./Assets/bob.png")
 }
 
 PlayerUpdate :: proc(self: ^Entity) {
@@ -40,5 +41,8 @@ PlayerUpdate :: proc(self: ^Entity) {
 }
 
 PlayerDraw :: proc(self: ^Entity) {
-	r.DrawRectangle(self.x, self.y, self.w, self.h, r.BLACK)
+	txt_src : r.Rectangle = {0.0, 0.0, f32(player.sprite.width), f32(player.sprite.height)} 
+	txt_dest : r.Rectangle = {f32(player.x), f32(player.y), f32(player.sprite.width), f32(player.sprite.height)} 
+	txt_origin : r.Vector2 = {0, 0}
+	r.DrawTexturePro(player.sprite, txt_src, txt_dest, txt_origin, 0, r.RED)
 }
