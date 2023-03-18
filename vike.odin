@@ -33,8 +33,6 @@ vLoadTexture2d :: proc(src : cstring) -> r.Texture2D {
 	return r.LoadTexture(src)
 }
 
-
-
 vUnloadTexture2d :: proc(tx : r.Texture2D) {
 	r.UnloadTexture(tx)
 }
