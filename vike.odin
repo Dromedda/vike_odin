@@ -55,10 +55,7 @@ vDrawTexture2d :: proc(tx : Texture, posx:i32, posy:i32, tint : r.Color) {
 	r.DrawTexture(tx.texture, posx, posy, tint)
 }
 
-vDrawTexture2dPro :: proc(tx : Texture, srcX:i32, srcY:i32, srcW:i32, srcH: i32, destX:i32, destY:i32, destW:i32, destH:i32, originX:i32, originY:i32, rot:i32, tint:r.Color) {
-	src : r.Rectangle = {f32(srcX), f32(srcY), f32(srcW), f32(srcH)}
-	dest : r.Rectangle = {f32(destX), f32(destY), f32(destW), f32(destH)}
-	origin : r.Vector2 = {f32(originX), f32(originY)}
+vDrawTexture2dPro :: proc(tx : Texture, src: r.Rectangle,dest: r.Rectangle, origin : r.Vector2, rot:i32, tint:r.Color) {
 	r.DrawTexturePro(tx.texture, src, dest, origin, f32(rot), tint)
 }
 
