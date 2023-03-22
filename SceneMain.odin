@@ -1,4 +1,5 @@
 package main
+
 import r "vendor:raylib"
 import f "core:fmt"
 
@@ -37,5 +38,4 @@ SceneMainEnd :: proc () {
 	log("CLOSING MAIN SCENE")
 	PlayerEnd(&player)
 }
-
 

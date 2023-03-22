@@ -1,4 +1,5 @@
 package main
+
 import r "vendor:raylib"
 import f "core:fmt"
 
@@ -12,7 +13,7 @@ SceneTest : Scene = {
 
 players : [1200] Entity
 
-SceneTestInit :: proc () {
+SceneTestInit :: proc() {
 	log("SCENE TEST LOADING")
 	vBenchmarkTimerStart()
 	for i := 0; i < len(players); i+= 1 {
@@ -21,7 +22,7 @@ SceneTestInit :: proc () {
 			y = r.GetRandomValue(0, 600), 
 			w = 100,
 			h = 100, 
-			init = proc (self: ^Entity) {
+			init = proc(self: ^Entity) {
 				self.sprite = vLoadTexture2d("./Assets/bob.png")
 			},
 			update = proc(self: ^Entity) {
@@ -43,7 +44,7 @@ SceneTestInit :: proc () {
 	vBenchmarkTimerLog("TEST SCENE")
 }
 
-SceneTestUpdate :: proc () {
+SceneTestUpdate :: proc() {
 	if (vkeyr(r.KeyboardKey.F1)) {
 		vGotoScene("main")
 	}

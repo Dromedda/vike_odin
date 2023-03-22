@@ -1,4 +1,5 @@
 package main
+
 import r "vendor:raylib"
 import f "core:fmt"
 
@@ -7,7 +8,7 @@ game:Game = {
 	height = 600,
 }
 
-main::proc() {
+main :: proc() {
 	r.InitWindow(game.width, game.height, "VIKE")
 	r.SetTargetFPS(60)
 	defer r.CloseWindow()
@@ -18,7 +19,6 @@ main::proc() {
 	vGameInit()
 	defer vGameEnd()
 
-
 	for !r.WindowShouldClose() {
 		vGameUpdate()
 
@@ -27,6 +27,5 @@ main::proc() {
 			vGameDraw()
 		r.EndDrawing()
 	}
-
 }
 

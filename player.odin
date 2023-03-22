@@ -1,4 +1,5 @@
 package main
+
 import r "vendor:raylib"
 import f "core:fmt"
 
@@ -8,7 +9,7 @@ Player :: struct {
 	using entity: Entity,
 }
 
-PlayerInit :: proc(self: ^Player, xx:i32, yy:i32) {	
+PlayerInit :: proc(self: ^Player, xx: i32, yy: i32) {	
 	log("CREATED PLAYER")
 	self.x = xx
 	self.y = yy
