@@ -2,49 +2,46 @@ package main
 import r "vendor:raylib"
 import f "core:fmt"
 
-@(private="file")
-PlayerSpeed: f64 = 5
-
-@(private="file")
-SprintMultiplier: f64 = 2.4
-
 Player :: struct {
+	speed : f64,
+	sprint_multiplyer: f64,
 	using entity: Entity,
 }
 
-PlayerInit :: proc(self: ^Entity) {	
+PlayerInit :: proc(self: ^Player, xx:i32, yy:i32) {	
 	log("CREATED PLAYER")
-	player.x = 200
-	player.y = 200
-	player.w = 32
-	player.h = 32
-	player.sprite = vLoadTexture2d("./Assets/bob.png")
+	self.x = xx
+	self.y = yy
+	self.w = 32
+	self.h = 32
+	self.speed = 5.0
+	self.sprint_multiplyer = 2.0
+	self.sprite = vLoadTexture2d("./Assets/bob.png")
 }
 
-PlayerUpdate :: proc(self: ^Entity) {
-	spd:= PlayerSpeed
+PlayerUpdate :: proc(self: ^Player) {
+	spd:= self.speed
 	moveX := (i32(vkeyd(r.KeyboardKey.D)) - i32(vkeyd(r.KeyboardKey.A)))
 	moveY := (i32(vkeyd(r.KeyboardKey.S)) - i32(vkeyd(r.KeyboardKey.W)))
 
-	// Sprinting
 	if (vkeyd(r.KeyboardKey.LEFT_SHIFT)) {
-		spd = spd * SprintMultiplier
+		spd = spd * self.sprint_multiplyer
 	}
 
-	// Normalize if we are moving diagonally
 	if (moveX != 0 && moveY != 0) { spd = spd * 0.8 }
 
 	self.x += moveX * i32(spd); 
 	self.y += moveY * i32(spd); 
 }
 
-PlayerDraw :: proc(self: ^Entity) {
+PlayerDraw :: proc(self: ^Player) {
 	txt_src : r.Rectangle = {0.0, 0.0, f32(player.sprite.width), f32(player.sprite.height)} 
 	txt_dest : r.Rectangle = {f32(player.x), f32(player.y), f32(player.sprite.width), f32(player.sprite.height)} 
 	txt_origin : r.Vector2 = {0, 0}
 	r.DrawTexturePro(player.sprite, txt_src, txt_dest, txt_origin, 0, r.RED)
 }
 
-PlayerEnd :: proc(self: ^Entity) {
+PlayerEnd :: proc(self: ^Player) {
 	log("ENDING PLAYER")
+	vUnloadTexture2d(self.sprite)
 }

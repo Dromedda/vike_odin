@@ -2,12 +2,9 @@ package main
 import r "vendor:raylib"
 import "core:fmt"
 
-MAX_ENTITIES :: 200
-MAX_SCENES :: 4
-
 Game :: struct {
-	entities : [MAX_ENTITIES]Entity,
-	scenes : [MAX_SCENES]Scene,
+	entities : [dynamic]Entity,
+	scenes : [dynamic]Scene,
 	activeScene : Scene,
 	width : i32,
 	height : i32,
@@ -31,15 +28,37 @@ Scene :: struct {
 	end: proc(),	
 }
 
-
-// TODO: Add a way to add scenes and entities to the game struct
-
-vLoadTexture2d :: proc(src : cstring) -> r.Texture2D {
-	return r.LoadTexture(src)
+vGameInit :: proc () {
+	assert(len(game.scenes) != 0, "CANNOT INIT SCENE.. \n Did you add the scene to the game with vAddScene()")
+	game.activeScene.init()
 }
 
-vUnloadTexture2d :: proc(tx : r.Texture2D) {
-	r.UnloadTexture(tx)
+vGameUpdate :: proc() {
+	assert(len(game.scenes) != 0, "CANNOT UPDATE SCENE.. \n Did you add the scene to the game with vAddScene()")
+	game.activeScene.update()
+}
+
+vGameDraw :: proc() {
+	assert(len(game.scenes) != 0, "CANNOT DRAW SCENE.. \n Did you add the scene to the game with vAddScene()")
+	game.activeScene.draw()
+}
+
+vGameEnd :: proc() {
+	assert(len(game.scenes) != 0, "CANNOT END SCENE.. \n Did you add the scene to the game with vAddScene()")
+	game.activeScene.end()
+}
+
+vAddEntity :: proc(e: Entity) {
+	append(&game.entities, e)
+	fmt.println("Added Entity To Game::", e)
+}
+
+vAddScene :: proc(scn: Scene) {
+	if (len(game.scenes) == 0) {
+		game.activeScene = scn
+	}
+	append(&game.scenes, scn)
+	fmt.println("Added Scene To Game::", scn)
 }
 
 vGotoScene :: proc(id: string) -> Scene {
@@ -58,6 +77,14 @@ vGotoScene :: proc(id: string) -> Scene {
 	return ret
 }
 
+vLoadTexture2d :: proc(src : cstring) -> r.Texture2D {
+	return r.LoadTexture(src)
+}
+
+vUnloadTexture2d :: proc(tx : r.Texture2D) {
+	r.UnloadTexture(tx)
+}
+
 log :: proc(str: string) {
 	fmt.println("VIKE::LOG::", str)
 }
@@ -65,12 +92,10 @@ log :: proc(str: string) {
 @(private="file")
 benchmarkTimerStartTime : f64
 
-// A very basic way to check how long it takes to load things or something
 vBenchmarkTimerStart :: proc() {
 	benchmarkTimerStartTime = r.GetTime()
 }
 
-// stop and log the result of the ongoing benchmark thingy
 vBenchmarkTimerLog :: proc(inst : string) -> f64{
 	endTime := r.GetTime()
 	res := endTime - benchmarkTimerStartTime

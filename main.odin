@@ -2,36 +2,31 @@ package main
 import r "vendor:raylib"
 import f "core:fmt"
 
-// TODO: Figure out Arrays in ODIN 
 game:Game = {
-	activeScene = SceneMain,
 	width = 900,
 	height = 600,
 }
 
 main::proc() {
-	// Add the scenes
-	game.scenes[0] = SceneMain
-	game.scenes[1] = SceneTest
-
-	// do some inits for the window
 	r.InitWindow(game.width, game.height, "VIKE")
 	r.SetTargetFPS(60)
-	game.activeScene.init()
+	defer r.CloseWindow()
 
-	// Main Loop
+	vAddScene(SceneMain)
+	vAddScene(SceneTest)
+
+	vGameInit()
+	defer vGameEnd()
+
+
 	for !r.WindowShouldClose() {
-		game.activeScene.update()
+		vGameUpdate()
 
-		// Draw calls go in here
 		r.BeginDrawing()
 			r.DrawFPS(8,8)
-			game.activeScene.draw()
+			vGameDraw()
 		r.EndDrawing()
 	}
 
-	// Close the window and context
-	game.activeScene.end()
-	r.CloseWindow()
 }
 
