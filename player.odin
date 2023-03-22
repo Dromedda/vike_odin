@@ -9,17 +9,18 @@ PlayerSpeed: f64 = 5
 SprintMultiplier: f64 = 2.4
 
 player : Entity = {
-	x = 200,
-	y = 200,
-	w = 32,
-	h = 32,
 	init = PlayerInit,
 	update = PlayerUpdate,
 	draw = PlayerDraw,
+	end = PlayerEnd,
 }
 
-PlayerInit :: proc(self: ^Entity) {
+PlayerInit :: proc(self: ^Entity) {	
 	log("CREATED PLAYER")
+	player.x = 200
+	player.y = 200
+	player.w = 32
+	player.h = 32
 	player.sprite = vLoadTexture2d("./Assets/bob.png")
 }
 
@@ -45,4 +46,8 @@ PlayerDraw :: proc(self: ^Entity) {
 	txt_dest : r.Rectangle = {f32(player.x), f32(player.y), f32(player.sprite.width), f32(player.sprite.height)} 
 	txt_origin : r.Vector2 = {0, 0}
 	r.DrawTexturePro(player.sprite, txt_src, txt_dest, txt_origin, 0, r.RED)
+}
+
+PlayerEnd :: proc(self: ^Entity) {
+	log("ENDING PLAYER")
 }

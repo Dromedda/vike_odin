@@ -1,6 +1,7 @@
 package main
 import r "vendor:raylib"
 import f "core:fmt"
+import "core:math"
 
 SceneMain : Scene = {
 	id = "main",
@@ -18,9 +19,10 @@ SceneTest : Scene = {
 	end = SceneTestEnd,
 }
 
-// -- MAIN SCENE -- // 
+
+// -- Main Scene
 SceneMainInit :: proc () {
-	log("SCENE MAIN LOADED")
+	log("SCENE MAIN LOADING")
 	player.init(&player)
 }
 
@@ -33,23 +35,28 @@ SceneMainUpdate :: proc () {
 
 SceneMainDraw :: proc () {
 	r.ClearBackground(r.LIGHTGRAY)
+	r.DrawRectangleGradientV(0, 0, game.width, game.height, r.SKYBLUE, r.DARKPURPLE)
 	r.DrawText("MAIN SCENE", 8, 48, 32, r.DARKGRAY)
 	player.draw(&player)
 }
 
 SceneMainEnd :: proc () {
 	log("CLOSING MAIN SCENE")
+	vUnloadTexture2d(player.sprite)
 }
 
-players : [2000] Entity
 
-// -- TEST SCENE -- // 
+// -- Test Scene
+players : [1200] Entity
+startTime : f64
+
 SceneTestInit :: proc () {
-	log("SCENE TEST LOADED")
+	log("SCENE TEST LOADING")
+	vBenchmarkTimerStart()
 	for i := 0; i < len(players); i+= 1 {
 		p : Entity= {
-			x = 300, 
-			y = 200, 
+			x = r.GetRandomValue(0, 600), 
+			y = r.GetRandomValue(0, 600), 
 			w = 100,
 			h = 100, 
 			init = proc (self: ^Entity) {
@@ -61,13 +68,16 @@ SceneTestInit :: proc () {
 				txt_src : r.Rectangle = {0.0, 0.0, f32(self.sprite.width), f32(self.sprite.height)} 
 				txt_dest : r.Rectangle = {f32(self.x), f32(self.y), f32(self.sprite.width), f32(player.sprite.height)} 
 				txt_origin : r.Vector2 = {0, 0}
-				r.DrawTexturePro(player.sprite, txt_src, txt_dest, txt_origin, 0, r.RED)
+
+				pcol := getRandomColor()
+				r.DrawTexturePro(player.sprite, txt_src, txt_dest, txt_origin, 0, pcol)
 			},
 		}
 		f.println("Created:: ", p)
 		p.init(&p)
 		players[i] = p
 	}
+	vBenchmarkTimerLog("TEST SCENE")
 }
 
 SceneTestUpdate :: proc () {
@@ -89,7 +99,28 @@ SceneTestDraw :: proc() {
 
 SceneTestEnd :: proc () {
 	log("CLOSING TEST SCENE")
-	for i := 0; i < len(players); i+= 1 {
-		vUnloadTexture2d(players[i].sprite)	
+	for p in players {
+		vUnloadTexture2d(p.sprite)
 	}
+}
+
+// TODO: Clean up and put in vike instead of here 
+getRandomColor :: proc() -> r.Color {
+	val := r.GetRandomValue(0, 4)
+	ret : r.Color
+	switch(val) {
+		case 0:
+			ret = r.RED
+		case 1: 
+			ret = r.GREEN
+		case 2: 
+			ret = r.YELLOW
+		case 3: 
+			ret = r.BROWN
+		case 4: 
+			ret = r.MAGENTA
+		case: 
+			ret = r.BLUE
+	}
+	return ret
 }

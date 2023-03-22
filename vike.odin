@@ -9,20 +9,22 @@ Game :: struct {
 	entities : [MAX_ENTITIES]Entity,
 	scenes : [MAX_SCENES]Scene,
 	activeScene : Scene,
+	width : i32,
+	height : i32,
 }
 
 Entity :: struct {
 	x,y,w,h: i32,
 	init: proc(self:^Entity),
 	update: proc(self:^Entity),
-	draw: proc(selfe:^Entity),
+	draw: proc(self:^Entity),
+	end: proc(self:^Entity),
 	sprite : r.Texture2D,
 }
 
-// TODO: add textures to the assoicated scene and load them on init
-// -- Also unload them on end
 Scene :: struct {
 	id: string,
+	entities : [dynamic]Entity,
 	init: proc(),
 	update: proc(),
 	draw: proc(),
@@ -55,6 +57,23 @@ vGotoScene :: proc(id: string) -> Scene {
 
 log :: proc(str: string) {
 	fmt.println("VIKE::LOG::", str)
+}
+
+@(private="file")
+benchmarkTimerStartTime : f64
+
+// A very basic way to check how long it takes to load things or something
+vBenchmarkTimerStart :: proc() {
+	benchmarkTimerStartTime = r.GetTime()
+}
+
+// stop and log the result of the ongoing benchmark thingy
+vBenchmarkTimerLog :: proc(inst : string) -> f64{
+	endTime := r.GetTime()
+	res := endTime - benchmarkTimerStartTime
+	fmt.println(inst," Benchmark Took: ", res, "ms")
+	benchmarkTimerStartTime = 0.0
+	return res
 }
 
 vk :: proc (k:string) {

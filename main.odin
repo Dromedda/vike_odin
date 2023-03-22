@@ -5,22 +5,17 @@ import f "core:fmt"
 // TODO: Figure out Arrays in ODIN 
 game:Game = {
 	activeScene = SceneMain,
+	width = 900,
+	height = 600,
 }
-
-window_w := 900
-window_h := 600
 
 main::proc() {
 	// Add the scenes
 	game.scenes[0] = SceneMain
 	game.scenes[1] = SceneTest
 
-	// Create Some window dims and make them i32s
-	ww := cast(i32) window_w
-	wh := cast(i32) window_h	
-
 	// do some inits for the window
-	r.InitWindow(ww, wh, "VIKE")
+	r.InitWindow(game.width, game.height, "VIKE")
 	r.SetTargetFPS(60)
 	game.activeScene.init()
 
