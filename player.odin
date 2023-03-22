@@ -8,11 +8,8 @@ PlayerSpeed: f64 = 5
 @(private="file")
 SprintMultiplier: f64 = 2.4
 
-player : Entity = {
-	init = PlayerInit,
-	update = PlayerUpdate,
-	draw = PlayerDraw,
-	end = PlayerEnd,
+Player :: struct {
+	using entity: Entity,
 }
 
 PlayerInit :: proc(self: ^Entity) {	

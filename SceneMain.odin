@@ -20,14 +20,16 @@ SceneTest : Scene = {
 }
 
 
+player : Player
+
 // -- Main Scene
 SceneMainInit :: proc () {
 	log("SCENE MAIN LOADING")
-	player.init(&player)
+	PlayerInit(&player)
 }
 
 SceneMainUpdate :: proc () {
-	player.update(&player)
+	PlayerUpdate(&player)
 	if (vkeyr(r.KeyboardKey.F1)) {
 		vGotoScene("test")
 	}
@@ -37,7 +39,7 @@ SceneMainDraw :: proc () {
 	r.ClearBackground(r.LIGHTGRAY)
 	r.DrawRectangleGradientV(0, 0, game.width, game.height, r.SKYBLUE, r.DARKPURPLE)
 	r.DrawText("MAIN SCENE", 8, 48, 32, r.DARKGRAY)
-	player.draw(&player)
+	PlayerDraw(&player)
 }
 
 SceneMainEnd :: proc () {

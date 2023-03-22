@@ -31,6 +31,9 @@ Scene :: struct {
 	end: proc(),	
 }
 
+
+// TODO: Add a way to add scenes and entities to the game struct
+
 vLoadTexture2d :: proc(src : cstring) -> r.Texture2D {
 	return r.LoadTexture(src)
 }
