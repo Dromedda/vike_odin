@@ -36,10 +36,10 @@ PlayerUpdate :: proc(self: ^Player) {
 }
 
 PlayerDraw :: proc(self: ^Player) {
-	txt_src : r.Rectangle = {0.0, 0.0, f32(player.sprite.width), f32(player.sprite.height)} 
-	txt_dest : r.Rectangle = {f32(player.x), f32(player.y), f32(player.sprite.width), f32(player.sprite.height)} 
+	txt_src : r.Rectangle = {0.0, 0.0, f32(self.sprite.width), f32(self.sprite.height)} 
+	txt_dest : r.Rectangle = {f32(self.x), f32(self.y), f32(self.sprite.width), f32(self.sprite.height)} 
 	txt_origin : r.Vector2 = {0, 0}
-	r.DrawTexturePro(player.sprite, txt_src, txt_dest, txt_origin, 0, r.RED)
+	r.DrawTexturePro(self.sprite, txt_src, txt_dest, txt_origin, 0, r.RED)
 }
 
 PlayerEnd :: proc(self: ^Player) {
