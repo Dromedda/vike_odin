@@ -5,11 +5,11 @@ import "core:fmt"
 
 // Main Game Struct, used to keep track of the state of the game
 Game :: struct {
-	entities : [dynamic]Entity,
 	scenes : [dynamic]Scene,
 	activeScene : Scene,
 	width : i32,
 	height : i32,
+	debug : bool,
 }
 
 // An Entity is a thing that has logic, similar to an object/node in engines like GMS and Godot
@@ -56,11 +56,15 @@ vGameEnd :: proc() {
 	game.activeScene.end()
 }
 
-// NOTE: Might wanna make this local to the scene instead of the game
+// Returns true if we were to collide with an entity at the provided pos
+// vCheckMeeting :: proc(self: ^Entity, posX: i32, posY: i32) -> ([]Entity){
+	
+// }
+
 // Adds an entity to the game
-vAddEntity :: proc(e: Entity) {
-	append(&game.entities, e)
-	fmt.println("Added Entity To Game::", e)
+vAddEntityToScene :: proc(e: Entity, scn: ^Scene) {
+	append(&scn.entities, e)
+	fmt.println("Added Entity::", e, " To Scene::", scn.id)
 }
 
 // Adds a scene to the game, If no other scene has been added it will set the provided scene to active

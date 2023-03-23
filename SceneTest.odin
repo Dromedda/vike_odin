@@ -39,7 +39,7 @@ SceneTestInit :: proc() {
 		f.println("Created:: ", p)
 		p.init(&p)
 		players[i] = p
-		vAddEntity(players[i])
+		vAddEntityToScene(players[i], &SceneTest)
 	}
 	vBenchmarkTimerLog("TEST SCENE")
 }

@@ -14,9 +14,9 @@ SceneMain : Scene = {
 player : Player
 
 SceneMainInit :: proc () {
-	vAddEntity(player)
-	log("SCENE MAIN LOADING")
 	PlayerInit(&player, 100, 100)
+	vAddEntityToScene(player, &SceneMain)
+	log("SCENE MAIN LOADING")
 }
 
 SceneMainUpdate :: proc () {
