@@ -17,6 +17,7 @@ Game :: struct {
 
 // An Entity is a thing that has logic, similar to an object/node in engines like GMS and Godot
 Entity :: struct {
+	name: string,
 	x,y,w,h: i32,
 	sprite : Sprite,
 }
@@ -70,13 +71,15 @@ vGameEnd :: proc() {
 }
 
 
-// -- Scene Handling -- // 
+// -- Scene & Entity Handling -- // 
 
-// Adds an entity to the game
-vAddEntityToScene :: proc(e: Entity, scn: ^Scene) {
+
+// Adds an entity to the scene
+vAddEntityToScene :: proc(e: Entity,scn: ^Scene) {
 	append(&scn.entities, e)
 	fmt.println("Added Entity::", e, " To Scene::", scn.id)
 }
+
 
 // Adds a scene to the game, If no other scene has been added it will set the provided scene to active
 vAddScene :: proc(scn: Scene) {
@@ -101,6 +104,20 @@ vGotoScene :: proc(id: string) -> (ret: Scene) {
 	game.activeScene = ret
 	game.activeScene.init()
 	return ret
+}
+
+
+// -- "Physics" -- // 
+vCheckMeeting :: proc(a: ^Entity, b: ^Entity) -> bool {
+	if 	(a.x < b.x + b.w) && 
+			(a.x + a.w > b.x) && 
+			(a.y < b.y + b.h) &&
+			(a.y + a.h > b.y) {
+
+		return true
+		
+	}
+	return false
 }
 
 

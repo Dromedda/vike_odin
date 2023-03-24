@@ -17,7 +17,6 @@ PlayerInit :: proc(self: ^Player, xx: i32, yy: i32) {
 	self.h = 128
 	self.speed = 5.0
 	self.sprint_multiplyer = 2.0
-
 	self.sprite = vCreateSprite("./Assets/player_sheet2.png", 128, 128, 0, 0)
 	vCreateAnimation(self.sprite, 0, 3) // Red Splash
 	vCreateAnimation(self.sprite, 1, 4) // Blue Splash
