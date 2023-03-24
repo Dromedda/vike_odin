@@ -22,8 +22,7 @@ PlayerInit :: proc(self: ^Player, xx: i32, yy: i32) {
 	self.sprite = vCreateSprite("./Assets/player.png", 16, 16, 8, 8)
 	vCreateAnimation(self.sprite, 0, 3)
 	vCreateAnimation(self.sprite, 1, 11)
-	vSetCurrentAnimation(&self.sprite, 0)
-
+	self.sprite.current_animation = 0
 }
 
 PlayerUpdate :: proc(self: ^Player) {
@@ -31,9 +30,6 @@ PlayerUpdate :: proc(self: ^Player) {
 	moveX := (i32(vkeyd(r.KeyboardKey.D)) - i32(vkeyd(r.KeyboardKey.A)))
 	moveY := (i32(vkeyd(r.KeyboardKey.S)) - i32(vkeyd(r.KeyboardKey.W)))
 
-	if (vkeyd(r.KeyboardKey.LEFT_SHIFT)) {
-		spd = spd * self.sprint_multiplyer
-	}
 
 	if moveX != 0 {
 		self.facing_dir = f32(moveX)
@@ -41,10 +37,15 @@ PlayerUpdate :: proc(self: ^Player) {
 
 	if (moveX != 0 && moveY != 0) { spd = spd * 0.8 }
 
+	// TODO: Make this built into the sprite
+	target_anim_speed :f32 = 0
+
 	if (moveX != 0 || moveY != 0) {
-		vSetCurrentAnimation(&self.sprite, 1)	
+		self.sprite.current_animation = 1
+		target_anim_speed = 24
 	} else {
-		vSetCurrentAnimation(&self.sprite, 0)
+		self.sprite.current_animation = 0
+		target_anim_speed = 4
 	}
 
 	if (moveX < 0) {
@@ -53,10 +54,14 @@ PlayerUpdate :: proc(self: ^Player) {
 		self.sprite.flippedH = false
 	}
 
+	if (vkeyd(r.KeyboardKey.LEFT_SHIFT)) {
+		spd = spd * self.sprint_multiplyer
+		target_anim_speed = target_anim_speed * 2
+	}
+
 	self.x += moveX * i32(spd); 
 	self.y += moveY * i32(spd); 
 
-	target_anim_speed :f32 = 12
 	vUpdateAnimation(&self.sprite, target_anim_speed)
 }
 

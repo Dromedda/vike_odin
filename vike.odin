@@ -189,11 +189,6 @@ vGetCurrentAnimation :: proc(spr: ^Sprite) -> (i32) {
 	return spr.current_animation
 }
 
-// Sets the currently active animation for the provided sprite
-vSetCurrentAnimation :: proc(spr: ^Sprite, animation_index:i32) {
-	spr.current_animation = animation_index
-}
-
 // Updates the frame times of the currently active animation in a sprite 
 vUpdateAnimation :: proc(spr: ^Sprite, target_fps: f32) {
 	// There might be some technicality here wether we check for update first or if we increment first.
