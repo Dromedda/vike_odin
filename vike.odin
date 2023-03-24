@@ -73,7 +73,6 @@ vGameEnd :: proc() {
 
 // -- Scene & Entity Handling -- // 
 
-
 // Adds an entity to the scene
 vAddEntityToScene :: proc(e: Entity,scn: ^Scene) {
 	append(&scn.entities, e)
@@ -113,9 +112,7 @@ vCheckMeeting :: proc(a: ^Entity, b: ^Entity) -> bool {
 			(a.x + a.w > b.x) && 
 			(a.y < b.y + b.h) &&
 			(a.y + a.h > b.y) {
-
 		return true
-		
 	}
 	return false
 }
@@ -130,13 +127,11 @@ vCreateSprite :: proc(txt: cstring, frame_width: i32, frame_height: i32, origin_
 	spr.current_frame = 0
 	spr.current_animation = 0
 	max_anims := spr.texture.width / frame_width
-
 	// this is ugly but it works ? 
 	for i:i32=0; i < max_anims; i+= 1 {
 		append(&spr.animation_frames, 0)
 		append(&spr.frame_time, 0)
 	}
-
 	return
 }
 
@@ -160,16 +155,19 @@ vDrawSprite :: proc(spr: Sprite, x: i32, y:i32, rot:f32, col:r.Color) {
 	r.DrawTexturePro(spr.texture, src, dest, spr.origin, rot, col)
 }
 
+// Gets the current active sprite.. Same as spr.current_animation
 vGetCurrentAnimation :: proc(spr: ^Sprite) -> (i32) {
 	return spr.current_animation
 }
 
+// Sets the currently active animation for the provided sprite
 vSetCurrentAnimation :: proc(spr: ^Sprite, animation_index:i32) {
 	// TODO: DO some checks beforehand
 	spr.current_animation = animation_index
 	spr.current_frame = 0
 }
 
+// Updates the frame times of the currently active animation in a sprite 
 vUpdateAnimation :: proc(spr: ^Sprite, target_fps: f32) {
 	if (spr.frame_time[spr.current_animation] >= 1 / target_fps ) {
 		if (spr.current_frame < spr.animation_frames[spr.current_animation]-1) {
