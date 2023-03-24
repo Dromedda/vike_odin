@@ -88,11 +88,3 @@ package main
 
 		Sprite :: struct {texture: r.Texture2D, frame_width: i32, frame_height: i32, current_frame: i32, current_animation: i32, animation_frames: [dynamic]i32, frame_time: [dynamic]f32, origin: r.Vector2}
 
-
-	fullpath:
-		/home/dromedda/code/Vike_ODIN
-	files:
-		SceneMain.odin
-		main.odin
-		player.odin
-		vike.odin
