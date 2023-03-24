@@ -150,6 +150,7 @@ vGetCurrentAnimation :: proc(spr: ^Sprite) -> (i32) {
 vSetCurrentAnimation :: proc(spr: ^Sprite, animation_index:i32) {
 	// TODO: DO some checks beforehand
 	spr.current_animation = animation_index
+	spr.current_frame = 0
 }
 
 vUpdateAnimation :: proc(spr: ^Sprite, target_fps: f32) {
