@@ -1,0 +1,98 @@
+package main
+	variables
+		SceneMain: Scene = {id = "main", init = SceneMainInit, update = SceneMainUpdate, draw = SceneMainDraw, end = SceneMainEnd}
+		game: Game = {width = 900, height = 600, debug = true}
+		player: Player
+
+	procedures
+		CheckDebugToggle :: proc() {...}
+		PlayerDraw :: proc(self: ^Player) {...}
+		PlayerEnd :: proc(self: ^Player) {...}
+		PlayerInit :: proc(self: ^Player, xx: i32, yy: i32) {...}
+		PlayerUpdate :: proc(self: ^Player) {...}
+		SceneMainDraw :: proc() {...}
+		SceneMainEnd :: proc() {...}
+		SceneMainInit :: proc() {...}
+		SceneMainUpdate :: proc() {...}
+		log :: proc(str: string) {...}
+			Yeets a string to the term output
+
+		main :: proc() {...}
+		vAddEntityToScene :: proc(e: Entity, scn: ^Scene) {...}
+			Adds an entity to the game
+
+		vAddScene :: proc(scn: Scene) {...}
+			Adds a scene to the game, If no other scene has been added it will set the provided scene to active
+
+		vBenchmarkTimerLog :: proc(inst: string) -> f64 {...}
+			Prints the diff in time since we called vBenchmarkTimerStart().
+
+		vBenchmarkTimerStart :: proc() {...}
+			Starts a timer, use vBenchmarkTimerLog() to log the time between that and this proc call.
+
+		vCreateAnimation :: proc(spr: Sprite, animation: i32, num_of_frames: i32) {...}
+			TODO: Set the frame time here instead of in the update so that each animation has its own frame times
+			Creates an Animation, param animation is the row(Indexed from 0) in the sheet to use
+
+		vCreateSprite :: proc(txt: cstring, frame_width: i32, frame_height: i32, origin_x: f32, origin_y: f32) -> (spr: Sprite) {...}
+		vDrawSprite :: proc(spr: Sprite, x: i32, y: i32, rot: f32, col: r.Color) {...}
+			Draws a Create sprite
+
+		vGameDraw :: proc() {...}
+			Used to Draw the currently active scene
+
+		vGameEnd :: proc() {...}
+			Used to close and End the currently active scene
+
+		vGameInit :: proc() {...}
+			Used to Init the currently active scene
+
+		vGameUpdate :: proc() {...}
+			Used to Update the currently active scene
+
+		vGetCurrentAnimation :: proc(spr: ^Sprite) -> (: i32) {...}
+		vGotoScene :: proc(id: string) -> (ret: Scene) {...}
+			Goes to a scene, inits that scene and end the previusly active one.
+
+		vLoadTexture2d :: proc(src: cstring) -> (: r.Texture2D) {...}
+			Loads a texture, this Proc is quite useless right now
+
+		vSetCurrentAnimation :: proc(spr: ^Sprite, animation_index: i32) {...}
+		vUnloadTexture2d :: proc(tx: r.Texture2D) {...}
+			Same as with vLoadTexture, this Proc is quite useless right now
+
+		vUpdateAnimation :: proc(spr: ^Sprite, target_fps: f32) {...}
+		vk :: proc(k: string) {...}
+			I have no idea what this was supposed to be? maybe to get the r.KeyboardKey enums?
+
+		vkeyd :: proc(key: r.KeyboardKey) -> bool {...}
+			Checks if the provided key is down.
+
+		vkeyp :: proc(key: r.KeyboardKey) -> bool {...}
+			Checks if provided key has been pressed.
+
+		vkeyr :: proc(key: r.KeyboardKey) -> bool {...}
+			Checks if the provided key has been released.
+
+
+	types
+		Entity :: struct {x, y, w, h: i32, sprite: Sprite}
+			An Entity is a thing that has logic, similar to an object/node in engines like GMS and Godot
+
+		Game :: struct {scenes: [dynamic]Scene, activeScene: Scene, width: i32, height: i32, debug: bool}
+			Main Game Struct, used to keep track of the state of the game
+
+		Player :: struct {speed: f64, sprint_multiplyer: f64, using entity: Entity}
+		Scene :: struct {id: string, entities: [dynamic]Entity, init: proc(), update: proc(), draw: proc(), end: proc()}
+			A scene is litterly just a scene, with a few "methods" which handle the scene state and interactivity
+
+		Sprite :: struct {texture: r.Texture2D, frame_width: i32, frame_height: i32, current_frame: i32, current_animation: i32, animation_frames: [dynamic]i32, frame_time: [dynamic]f32, origin: r.Vector2}
+
+
+	fullpath:
+		/home/dromedda/code/Vike_ODIN
+	files:
+		SceneMain.odin
+		main.odin
+		player.odin
+		vike.odin
