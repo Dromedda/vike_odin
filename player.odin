@@ -13,11 +13,14 @@ PlayerInit :: proc(self: ^Player, xx: i32, yy: i32) {
 	log("CREATED PLAYER")
 	self.x = xx
 	self.y = yy
-	self.w = 32
-	self.h = 32
+	self.w = 128
+	self.h = 128
 	self.speed = 5.0
 	self.sprint_multiplyer = 2.0
-	self.sprite = vLoadTexture2d("./Assets/bob.png")
+
+	self.sprite = vCreateSprite("./Assets/player_sheet2.png", 128, 128, 0, 0)
+	vCreateAnimation(self.sprite, 0, 3) // Red Splash
+	vCreateAnimation(self.sprite, 1, 4) // Blue Splash
 }
 
 PlayerUpdate :: proc(self: ^Player) {
@@ -29,20 +32,35 @@ PlayerUpdate :: proc(self: ^Player) {
 		spd = spd * self.sprint_multiplyer
 	}
 
+	if (vkeyp(r.KeyboardKey.TAB)) {
+		if vGetCurrentAnimation(&self.sprite) == 1 {
+			vSetCurrentAnimation(&self.sprite, 0)
+		} else {
+			vSetCurrentAnimation(&self.sprite, 1)
+		}
+	}
+
 	if (moveX != 0 && moveY != 0) { spd = spd * 0.8 }
 
 	self.x += moveX * i32(spd); 
 	self.y += moveY * i32(spd); 
+
+	// This is temp until we have animation specific frame times.
+	target_anim_speed :f32 = 2.0
+	if (vGetCurrentAnimation(&self.sprite) == 0) {
+		target_anim_speed = 1
+	} else {
+		target_anim_speed = 12
+	}
+
+	vUpdateAnimation(&self.sprite, target_anim_speed)
 }
 
 PlayerDraw :: proc(self: ^Player) {
-	txt_src : r.Rectangle = {0.0, 0.0, f32(self.sprite.width), f32(self.sprite.height)} 
-	txt_dest : r.Rectangle = {f32(self.x), f32(self.y), f32(self.sprite.width), f32(self.sprite.height)} 
-	txt_origin : r.Vector2 = {0, 0}
-	r.DrawTexturePro(self.sprite, txt_src, txt_dest, txt_origin, 0, r.RED)
+	vDrawSprite(self.sprite, self.x, self.y, 0, r.WHITE)
 }
 
 PlayerEnd :: proc(self: ^Player) {
 	log("ENDING PLAYER")
-	vUnloadTexture2d(self.sprite)
+	// vUnloadTexture2d(self.sprite)
 }

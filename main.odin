@@ -15,7 +15,6 @@ main :: proc() {
 	defer r.CloseWindow() // Defer defers the call to the end of the scope
 
 	vAddScene(SceneMain)
-	vAddScene(SceneTest)
 
 	vGameInit()
 	defer vGameEnd()
