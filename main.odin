@@ -24,11 +24,6 @@ main :: proc() {
 		CheckDebugToggle()
 		r.BeginDrawing()
 			vGameDraw()
-
-			if (game.debug) {
-				r.DrawFPS(8,8)
-			}
-
 		r.EndDrawing()
 	}
 }

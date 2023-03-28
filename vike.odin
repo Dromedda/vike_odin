@@ -27,6 +27,7 @@ Entity :: struct {
 Scene :: struct {
 	id: string,
 	entities : [dynamic]Entity,
+	tiles: [dynamic]Tile,
 	init: proc(),
 	update: proc(),
 	draw: proc(),
@@ -48,13 +49,9 @@ Sprite :: struct {
 
 
 Tile :: struct {
+	name: string,
 	texture: r.Texture2D, 
 	x,y,w,h : i32,
-}
-
-TileSet :: struct {
-	name: string,
-	tiles: [dynamic][dynamic]Tile,
 }
 
 // -- Flow -- // 
@@ -92,7 +89,6 @@ vAddEntityToScene :: proc(e: Entity,scn: ^Scene) {
 	fmt.println("Added Entity::", e, " To Scene::", scn.id)
 }
 
-
 // Adds a scene to the game, If no other scene has been added it will set the provided scene to active
 vAddScene :: proc(scn: Scene) {
 	if (len(game.scenes) == 0) {
@@ -118,9 +114,23 @@ vGotoScene :: proc(id: string) -> (ret: Scene) {
 	return ret
 }
 
-
 // -- "Physics" -- // 
-vCheckMeeting :: proc(a: ^Entity, b: ^Entity) -> bool {
+
+// TODO: make a func that returns all colliding entities
+
+// Checks if 2 entities are overlapping
+vCheckMeetingE :: proc(a: ^Entity, b: ^Entity) -> bool {
+	if 	(a.x < b.x + b.w) && 
+			(a.x + a.w > b.x) && 
+			(a.y < b.y + b.h) &&
+			(a.y + a.h > b.y) {
+		return true
+	}
+	return false
+}
+
+// Checks if entity is overlapping with Tile
+vCheckMeetingT :: proc(a: ^Entity, b: ^Tile) -> bool {
 	if 	(a.x < b.x + b.w) && 
 			(a.x + a.w > b.x) && 
 			(a.y < b.y + b.h) &&
@@ -139,6 +149,7 @@ vCheckMeeting :: proc(a: ^Entity, b: ^Entity) -> bool {
 
 // -- Sprite Drawing -- // 
 
+// Create a drawable sprite, useful when using vDrawSprite
 vCreateSprite :: proc(txt: cstring, frame_width: f32, frame_height: f32, origin_x: f32, origin_y: f32) -> (spr: Sprite){
 	spr.texture = vLoadTexture2d(txt)
 	spr.frame_width, spr.frame_height = frame_width, frame_height
@@ -169,17 +180,9 @@ vLoadTexture2d :: proc(src: cstring) -> (r.Texture2D) {
 vDrawSprite :: proc(spr: Sprite, x: i32, y:i32, sclx:f32, scly:f32, rot:f32, col:r.Color) {
 	srcx := f32(spr.current_frame) * spr.frame_width
 	srcy := f32(spr.current_animation) * spr.frame_height
-
 	src := r.Rectangle{srcx, srcy, f32(spr.frame_width), f32(spr.frame_height)}
-
-	// this is kinda uggo
-	if (spr.flippedH) {
-		src = r.Rectangle{srcx, srcy, f32(-spr.frame_width), f32(spr.frame_height)}
-	}
-	if (spr.flippedV) {
-		src = r.Rectangle{srcx, srcy, f32(spr.frame_width), f32(-spr.frame_height)}
-	}
-
+	if (spr.flippedH) {	src = r.Rectangle{srcx, srcy, f32(-spr.frame_width), f32(spr.frame_height)} }
+	if (spr.flippedV) {	src = r.Rectangle{srcx, srcy, f32(spr.frame_width), f32(-spr.frame_height)}	}
 	dest := r.Rectangle{f32(x), f32(y), spr.frame_width * sclx, spr.frame_height * scly}
 	r.DrawTexturePro(spr.texture, src, dest, spr.origin, rot, col)
 }
@@ -191,13 +194,10 @@ vGetCurrentAnimation :: proc(spr: ^Sprite) -> (i32) {
 
 // Updates the frame times of the currently active animation in a sprite 
 vUpdateAnimation :: proc(spr: ^Sprite, target_fps: f32) {
-	// There might be some technicality here wether we check for update first or if we increment first.
 	spr.frame_time[spr.current_animation] += r.GetFrameTime()
-
 	if spr.current_frame > spr.animation_frames[spr.current_animation] {
 		spr.current_frame = 0
 	}
-
 	if (spr.frame_time[spr.current_animation] >= 1 / target_fps ) {
 		if (spr.current_frame < spr.animation_frames[spr.current_animation]-1) {
 			spr.current_frame += 1
@@ -216,7 +216,7 @@ vUnloadTexture2d :: proc(tx: r.Texture2D) {
 
 // -- Random Utils -- //
 
-// Yeets a string to the term output 
+// Yeets a string to the term 
 log :: proc(str: string) {
 	fmt.println("VIKE::LOG::", str)
 }
@@ -240,11 +240,6 @@ vBenchmarkTimerLog :: proc(inst: string) -> f64{
 
 
 // -- Input -- // 
-
-// I have no idea what this was supposed to be? maybe to get the r.KeyboardKey enums?
-vk :: proc (k: string) {
-	assert(false, "Not Implemented Yet...")
-}
 
 // Checks if provided key has been pressed.
 vkeyp :: proc(key: r.KeyboardKey) -> bool {
