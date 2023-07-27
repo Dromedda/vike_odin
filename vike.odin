@@ -2,7 +2,7 @@ package main
 
 import r "vendor:raylib"
 import "core:fmt"
-
+import "core:strings"
 
 // -- Data -- // 
 
@@ -46,7 +46,6 @@ Sprite :: struct {
 	flippedH: bool,
 	flippedV: bool,
 }
-
 
 Tile :: struct {
 	name: string,
@@ -120,10 +119,11 @@ vGotoScene :: proc(id: string) -> (ret: Scene) {
 
 // Checks if 2 entities are overlapping
 vCheckMeetingE :: proc(a: ^Entity, b: ^Entity) -> bool {
-	if 	(a.x < b.x + b.w) && 
-			(a.x + a.w > b.x) && 
-			(a.y < b.y + b.h) &&
-			(a.y + a.h > b.y) {
+	if(a.x < b.x + b.w) && 
+		(a.x + a.w > b.x) && 
+		(a.y < b.y + b.h) &&
+		(a.y + a.h > b.y) {
+
 		return true
 	}
 	return false
@@ -131,10 +131,11 @@ vCheckMeetingE :: proc(a: ^Entity, b: ^Entity) -> bool {
 
 // Checks if entity is overlapping with Tile
 vCheckMeetingT :: proc(a: ^Entity, b: ^Tile) -> bool {
-	if 	(a.x < b.x + b.w) && 
-			(a.x + a.w > b.x) && 
-			(a.y < b.y + b.h) &&
-			(a.y + a.h > b.y) {
+	if(a.x < b.x + b.w) && 
+		(a.x + a.w > b.x) &&	 
+		(a.y < b.y + b.h) &&
+		(a.y + a.h > b.y) {
+
 		return true
 	}
 	return false
@@ -219,6 +220,7 @@ vUnloadTexture2d :: proc(tx: r.Texture2D) {
 // Yeets a string to the term 
 log :: proc(str: string) {
 	fmt.println("VIKE::LOG::", str)
+	vDebugLog(strings.clone_to_cstring(str))
 }
 
 @(private="file")
@@ -236,6 +238,32 @@ vBenchmarkTimerLog :: proc(inst: string) -> f64{
 	fmt.println(inst," Benchmark Took: ", res, "ms")
 	benchmarkTimerStartTime = 0.0
 	return res
+}
+
+@(private="file")
+debugStringLog : [dynamic]cstring
+
+vDebugLog :: proc(str: cstring) {
+	UPPERLIMIT :: 40 
+	inject_at(&debugStringLog, 0, str)
+	if (len(debugStringLog) > UPPERLIMIT) {
+		pop(&debugStringLog);
+	}
+}
+
+vDebugDrawLog :: proc() {
+	LINEHEIGHT :: 16
+	LINEOFFSET :: 4
+	CONSOLEOFFSET :: 4
+	if (len(debugStringLog) > 0) {
+		for i := 0; i < len(debugStringLog); i += 1 { 
+			r.DrawText( debugStringLog[i],
+									8, 
+									i32(CONSOLEOFFSET + (i * LINEHEIGHT + LINEOFFSET)), 
+									LINEHEIGHT, 
+									r.RED)
+		}
+	}
 }
 
 

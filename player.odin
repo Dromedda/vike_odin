@@ -58,8 +58,8 @@ PlayerUpdate :: proc(self: ^Player) {
 
 	if (moveX != 0 && moveY != 0) { spd = spd / 1.2 }
 	
-	self.x += moveX * i32(spd); 
-	self.y += moveY * i32(spd); 
+	self.x += moveX * i32(spd) 
+	self.y += moveY * i32(spd) 
 
 	vUpdateAnimation(&self.sprite, target_anim_speed)
 }

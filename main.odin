@@ -6,7 +6,7 @@ import f "core:fmt"
 game:Game = {
 	width = 900,
 	height = 600,
-	debug = true,
+	debug = false,
 }
 
 main :: proc() {
@@ -24,6 +24,7 @@ main :: proc() {
 		CheckDebugToggle()
 		r.BeginDrawing()
 			vGameDraw()
+			if(game.debug) { vDebugDrawLog() }
 		r.EndDrawing()
 	}
 }
