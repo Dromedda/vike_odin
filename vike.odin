@@ -4,6 +4,11 @@ import r "vendor:raylib"
 import "core:fmt"
 import "core:strings"
 
+DEBUG_LOG_TOTAL_LIMIT :: 50
+DEBUG_LOG_LINE_HEIGHT :: 16
+DEBUG_LOG_CONSOLE_OFFSET :: 8
+DEBUG_LOG_LINE_OFFSET :: 4
+
 // -- Data -- // 
 
 // Main Game Struct, used to keep track of the state of the game
@@ -168,7 +173,7 @@ vCreateSprite :: proc(txt: cstring, frame_width: f32, frame_height: f32, origin_
 
 // TODO: Set the frame time here instead of in the update so that each animation has its own frame times
 // Creates an Animation, param animation is the row(Indexed from 0) in the sheet to use
-vCreateAnimation :: proc(spr: Sprite, animation: i32, num_of_frames: i32,) {
+	vCreateAnimation :: proc(spr: Sprite, animation: i32, num_of_frames: i32,) {
 	spr.animation_frames[animation] = num_of_frames 
 }
 
@@ -217,7 +222,7 @@ vUnloadTexture2d :: proc(tx: r.Texture2D) {
 
 // -- Random Utils -- //
 
-// Yeets a string to the term 
+// Yeets a string to the term and in game log 
 log :: proc(str: string) {
 	fmt.println("VIKE::LOG::", str)
 	vDebugLog(strings.clone_to_cstring(str))
@@ -225,7 +230,6 @@ log :: proc(str: string) {
 
 @(private="file")
 benchmarkTimerStartTime : f64
-
 // Starts a timer, use vBenchmarkTimerLog() to log the time between that and this proc call.
 vBenchmarkTimerStart :: proc() {
 	benchmarkTimerStartTime = r.GetTime()
@@ -242,25 +246,20 @@ vBenchmarkTimerLog :: proc(inst: string) -> f64{
 
 @(private="file")
 debugStringLog : [dynamic]cstring
-
 vDebugLog :: proc(str: cstring) {
-	UPPERLIMIT :: 40 
 	inject_at(&debugStringLog, 0, str)
-	if (len(debugStringLog) > UPPERLIMIT) {
+	if (len(debugStringLog) > DEBUG_LOG_TOTAL_LIMIT) {
 		pop(&debugStringLog);
 	}
 }
 
 vDebugDrawLog :: proc() {
-	LINEHEIGHT :: 16
-	LINEOFFSET :: 4
-	CONSOLEOFFSET :: 4
 	if (len(debugStringLog) > 0) {
 		for i := 0; i < len(debugStringLog); i += 1 { 
 			r.DrawText( debugStringLog[i],
 									8, 
-									i32(CONSOLEOFFSET + (i * LINEHEIGHT + LINEOFFSET)), 
-									LINEHEIGHT, 
+									i32(DEBUG_LOG_CONSOLE_OFFSET+ (i * DEBUG_LOG_LINE_HEIGHT + DEBUG_LOG_LINE_OFFSET)), 
+									DEBUG_LOG_LINE_HEIGHT, 
 									r.RED)
 		}
 	}
