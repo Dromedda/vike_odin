@@ -32,7 +32,6 @@ Entity :: struct {
 Scene :: struct {
 	id: string,
 	entities : [dynamic]Entity,
-	tiles: [dynamic]Tile,
 	init: proc(),
 	update: proc(),
 	draw: proc(),
@@ -133,25 +132,6 @@ vCheckMeetingE :: proc(a: ^Entity, b: ^Entity) -> bool {
 	}
 	return false
 }
-
-// Checks if entity is overlapping with Tile
-vCheckMeetingT :: proc(a: ^Entity, b: ^Tile) -> bool {
-	if(a.x < b.x + b.w) && 
-		(a.x + a.w > b.x) &&	 
-		(a.y < b.y + b.h) &&
-		(a.y + a.h > b.y) {
-
-		return true
-	}
-	return false
-}
-
-// -- Tile Drawing -- // 
-// TODO: Implement
-/*
-	NOTE: might wanna look into the export from tiles, or similar editors, or just figure out how to do it 
-	youself, perhaps create a crude map editor
-*/
 
 // -- Sprite Drawing -- // 
 

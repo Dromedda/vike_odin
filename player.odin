@@ -71,5 +71,5 @@ PlayerDraw :: proc(self: ^Player) {
 
 PlayerEnd :: proc(self: ^Player) {
 	log("ENDING PLAYER")
-	// vUnloadTexture2d(self.sprite)
+	vUnloadTexture2d(self.sprite.texture)
 }

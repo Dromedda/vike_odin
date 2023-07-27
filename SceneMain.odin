@@ -12,20 +12,22 @@ SceneMain : Scene = {
 }
 
 player : Player
-floor : Tile
+floor : Entity 
 camera : r.Camera2D	
 
 SceneMainInit :: proc () {
 	log("SCENE MAIN LOADING")
+	player.name = "player"
 	PlayerInit(&player, 0, 0)
-	floor.w = 400
-	floor.h = 64
-	floor.x = 200
-	floor.y =  400
-	floor.texture = vLoadTexture2d("./Assets/tile.png")
-	player.name = "player1"
 
-	vAddEntityToScene(&player, &SceneMain)
+	floor.name = "floor"
+	floor.x, floor.y = 200, 400
+	floor.w, floor.h = 400, 64 
+	floor.sclx, floor.scly = 1, 1
+	floor.sprite = vCreateSprite("./Assets/tile.png", 400, 200, 0, 0)
+
+	vAddEntityToScene(floor, &SceneMain)
+	vAddEntityToScene(player, &SceneMain)
 
 	camera.zoom = 0.5
 	camera.offset = r.Vector2{f32(game.width/2), f32(game.height/2)}
@@ -34,7 +36,7 @@ SceneMainInit :: proc () {
 SceneMainUpdate :: proc () {
 	PlayerUpdate(&player)
 
-	if vCheckMeetingT(&player, &floor) {
+	if vCheckMeetingE(&player, &floor) {
 		vDebugLog("Touching Floor")
 	}
 
@@ -53,13 +55,14 @@ SceneMainDraw :: proc () {
 	r.BeginMode2D(camera)
 
 	PlayerDraw(&player)
-	r.DrawTexture(floor.texture, floor.x, floor.y, r.WHITE)
+	r.DrawTexture(floor.sprite.texture, floor.x, floor.y, r.WHITE)
 
 	r.EndMode2D()
 }
 
 SceneMainEnd :: proc () {
 	log("CLOSING MAIN SCENE")
+	vUnloadTexture2d(floor.sprite.texture)
 	PlayerEnd(&player)
 }
 
