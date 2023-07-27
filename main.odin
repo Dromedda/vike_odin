@@ -33,4 +33,8 @@ CheckDebugToggle :: proc() {
 	if vkeyp(r.KeyboardKey.F5) {
 		game.debug = !game.debug
 	}
+
+	if vkeyp(r.KeyboardKey.F6) {
+		vDebugLogClear()
+	}
 }

@@ -265,6 +265,10 @@ vDebugDrawLog :: proc() {
 	}
 }
 
+vDebugLogClear :: proc() {
+	clear(&debugStringLog)
+}
+
 
 // -- Input -- // 
 
