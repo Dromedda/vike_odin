@@ -89,7 +89,7 @@ vGameEnd :: proc() {
 // Adds an entity to the scene
 vAddEntityToScene :: proc(e: Entity,scn: ^Scene) {
 	append(&scn.entities, e)
-	fmt.println("Added Entity::", e, " To Scene::", scn.id)
+	fmt.println("Added Entity::", e.name, " To Scene::", scn.id)
 }
 
 // Adds a scene to the game, If no other scene has been added it will set the provided scene to active
@@ -104,22 +104,17 @@ vAddScene :: proc(scn: Scene) {
 // Goes to a scene, inits that scene and end the previusly active one.
 vGotoScene :: proc(id: string) -> (ret: Scene) {
 	for scene in game.scenes {
-		if scene.id == id {
-			ret = scene
-		} 
+		if scene.id == id { ret = scene } 
 	}
-
 	assert(ret.id != "", "CANNOT FIND SCENE \n Did you add it to the game struct?")
-
 	game.activeScene.end()
 	game.activeScene = ret
 	game.activeScene.init()
 	return ret
 }
 
-// -- "Physics" -- // 
 
-// TODO: make a func that returns all colliding entities
+// -- "Physics" -- // 
 
 // Checks if 2 entities are overlapping
 vCheckMeetingE :: proc(a: ^Entity, b: ^Entity) -> bool {
@@ -127,7 +122,6 @@ vCheckMeetingE :: proc(a: ^Entity, b: ^Entity) -> bool {
 		(a.x + a.w > b.x) && 
 		(a.y < b.y + b.h) &&
 		(a.y + a.h > b.y) {
-
 		return true
 	}
 	return false
@@ -153,7 +147,7 @@ vCreateSprite :: proc(txt: cstring, frame_width: f32, frame_height: f32, origin_
 
 // TODO: Set the frame time here instead of in the update so that each animation has its own frame times
 // Creates an Animation, param animation is the row(Indexed from 0) in the sheet to use
-	vCreateAnimation :: proc(spr: Sprite, animation: i32, num_of_frames: i32,) {
+vCreateAnimation :: proc(spr: Sprite, animation: i32, num_of_frames: i32,) {
 	spr.animation_frames[animation] = num_of_frames 
 }
 

@@ -9,12 +9,16 @@ game:Game = {
 	debug = false,
 }
 
+scenes : []Scene = { 
+	SceneMain,
+}
+
 main :: proc() {
 	r.InitWindow(game.width, game.height, "VIKE")
 	r.SetTargetFPS(60)
 	defer r.CloseWindow() // Defer defers the call to the end of the scope
 
-	vAddScene(SceneMain)
+	for scn in scenes { vAddScene(scn) }
 
 	vGameInit()
 	defer vGameEnd()

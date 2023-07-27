@@ -34,7 +34,6 @@ PlayerUpdate :: proc(self: ^Player) {
 		self.facing_dir = f32(moveX)
 	}
 
-	// TODO: Make this built into the sprite
 	target_anim_speed :f32 = 0
 
 	if (moveX != 0 || moveY != 0) {
@@ -45,11 +44,7 @@ PlayerUpdate :: proc(self: ^Player) {
 		target_anim_speed = 4
 	}
 
-	if (moveX < 0) {
-		self.sprite.flippedH = true
-	} else if (moveX > 0) {
-		self.sprite.flippedH = false
-	}
+	if (moveX != 0) { self.sprite.flippedH = (moveX < 0) }
 
 	if (vkeyd(r.KeyboardKey.LEFT_SHIFT)) {
 		spd = spd * self.sprint_multiplyer
