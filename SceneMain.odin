@@ -17,17 +17,22 @@ camera : r.Camera2D
 
 SceneMainInit :: proc () {
 	log("SCENE MAIN LOADING")
-	player.name = "player"
+
+	player = vCreateEntity(Player, "player")
+	vAddEntityToScene(player, &SceneMain)
 	PlayerInit(&player, 0, 0)
 
-	floor.name = "floor"
-	floor.x, floor.y = 200, 400
-	floor.w, floor.h = 400, 64 
-	floor.sclx, floor.scly = 1, 1
-	floor.sprite = vCreateSprite("./Assets/tile.png", 400, 200, 0, 0)
+	floor = vCreateEntity(Entity, "floor")
+	{
+		using floor // allows us to omit the "floor."
+		x, y = 200, 400
+		w, h = 400, 64
+		sclx, scly = 1, 1
+		sprite = vCreateSprite("./Assets/tile.png", 400, 200, 0, 0)
+		vAddEntityToScene(floor, &SceneMain)
+	}
 
-	vAddEntityToScene(floor, &SceneMain)
-	vAddEntityToScene(player, &SceneMain)
+	f.println(SceneMain)
 
 	camera.zoom = 0.5
 	camera.offset = r.Vector2{f32(game.width/2), f32(game.height/2)}

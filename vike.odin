@@ -13,8 +13,8 @@ DEBUG_LOG_LINE_OFFSET :: 4
 
 // Main Game Struct, used to keep track of the state of the game
 Game :: struct {
-	scenes : [dynamic]Scene,
-	activeScene : Scene,
+	scenes : [dynamic]^Scene,
+	activeScene : ^Scene,
 	width : i32,
 	height : i32,
 	debug : bool,
@@ -86,14 +86,22 @@ vGameEnd :: proc() {
 
 // -- Scene & Entity Handling -- // 
 
+vCreateEntity :: proc($T: typeid, name: string) -> T {
+	t := new(T)
+	t.name = name
+	return t^
+} 
+
 // Adds an entity to the scene
-vAddEntityToScene :: proc(e: Entity,scn: ^Scene) {
+vAddEntityToScene :: proc(e: Entity,scn: ^Scene) -> Scene {
+	assert(type_of(e) == Entity)
 	append(&scn.entities, e)
 	fmt.println("Added Entity::", e.name, " To Scene::", scn.id)
+	return scn^
 }
 
 // Adds a scene to the game, If no other scene has been added it will set the provided scene to active
-vAddScene :: proc(scn: Scene) {
+vAddScene :: proc(scn: ^Scene) {
 	if (len(game.scenes) == 0) {
 		game.activeScene = scn
 	}
@@ -102,7 +110,7 @@ vAddScene :: proc(scn: Scene) {
 }
 
 // Goes to a scene, inits that scene and end the previusly active one.
-vGotoScene :: proc(id: string) -> (ret: Scene) {
+vGotoScene :: proc(id: string) -> (ret: ^Scene) {
 	for scene in game.scenes {
 		if scene.id == id { ret = scene } 
 	}
@@ -115,6 +123,15 @@ vGotoScene :: proc(id: string) -> (ret: Scene) {
 
 
 // -- "Physics" -- // 
+
+vGetAllCollidingEntities :: proc(self: ^Entity, scn: ^Scene) -> (ret:[dynamic]Entity) {
+	for i := 0; i < len(scn.entities); i += 1 {
+		if (vCheckMeetingE(self, &scn.entities[i])) {
+			append(&ret, scn.entities[i])
+		}
+	} 
+	return 
+}
 
 // Checks if 2 entities are overlapping
 vCheckMeetingE :: proc(a: ^Entity, b: ^Entity) -> bool {

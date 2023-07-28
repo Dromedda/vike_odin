@@ -44,6 +44,11 @@ PlayerUpdate :: proc(self: ^Player) {
 		target_anim_speed = 4
 	}
 
+	ents := vGetAllCollidingEntities(self, game.activeScene)
+	for e in ents {
+		f.println("Touching", e)
+	}
+
 	if (moveX != 0) { self.sprite.flippedH = (moveX < 0) }
 
 	if (vkeyd(r.KeyboardKey.LEFT_SHIFT)) {
