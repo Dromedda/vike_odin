@@ -32,18 +32,12 @@ SceneMainInit :: proc () {
 		vAddEntityToScene(floor, &SceneMain)
 	}
 
-	f.println(SceneMain)
-
 	camera.zoom = 0.5
 	camera.offset = r.Vector2{f32(game.width/2), f32(game.height/2)}
 }
 
 SceneMainUpdate :: proc () {
 	PlayerUpdate(&player)
-
-	if vCheckMeetingE(&player, &floor) {
-		vDebugLog("Touching Floor")
-	}
 
 	if (game.debug) {
 		if vkeyp(r.KeyboardKey.Q) { camera.zoom = camera.zoom - 0.1; }

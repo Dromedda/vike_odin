@@ -46,7 +46,7 @@ PlayerUpdate :: proc(self: ^Player) {
 
 	ents := vGetAllCollidingEntities(self, game.activeScene)
 	for e in ents {
-		f.println("Touching", e)
+		f.println("Touching :: ", e.name)
 	}
 
 	if (moveX != 0) { self.sprite.flippedH = (moveX < 0) }
