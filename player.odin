@@ -44,10 +44,6 @@ PlayerUpdate :: proc(self: ^Player) {
 		target_anim_speed = 4
 	}
 
-	ents := vGetAllCollidingEntities(self, game.activeScene)
-	for e in ents {
-		f.println("Touching :: ", e.name)
-	}
 
 	if (moveX != 0) { self.sprite.flippedH = (moveX < 0) }
 
@@ -65,7 +61,13 @@ PlayerUpdate :: proc(self: ^Player) {
 }
 
 PlayerDraw :: proc(self: ^Player) {
-	r.DrawRectangle(self.x - i32(self.sprite.origin.x), self.y - i32(self.sprite.origin.y), self.w, self.h, r.BLUE)
+	drawColor := r.BLUE
+	ents := vGetAllCollidingEntities(self, game.activeScene) 
+	for e in ents {
+		drawColor = r.RED
+	}
+
+	r.DrawRectangle(self.x - i32(self.sprite.origin.x), self.y - i32(self.sprite.origin.y), self.w, self.h, drawColor)
 	vDrawSprite(self.sprite, self.x, self.y, 4, 4, 0, r.WHITE)
 }
 
