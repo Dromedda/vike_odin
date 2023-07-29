@@ -18,7 +18,7 @@ Game :: struct {
 	width : i32,
 	height : i32,
 	debug : bool,
-	camera: r.Camera2D,
+	camera: ^r.Camera2D,
 }
 
 // An Entity is a thing that has logic, similar to an object/node in engines like GMS and Godot
@@ -34,10 +34,10 @@ Entity :: struct {
 Scene :: struct {
 	id: string,
 	entities : [dynamic]Entity,
-	init: proc(),
-	update: proc(),
-	draw: proc(),
-	end: proc(),	
+	init: proc(^Scene),
+	update: proc(^Scene),
+	draw: proc(^Scene),
+	end: proc(^Scene),	
 	//using DefaultScene, this might be worth a shot ?
 }
 
@@ -66,25 +66,25 @@ Tile :: struct {
 // Used to Init the currently active scene
 vGameInit :: proc() {
 	assert(len(game.scenes) != 0, "CANNOT INIT SCENE.. \n Did you add the scene to the game with vAddScene()")
-	game.activeScene.init()
+	game.activeScene.init(game.activeScene)
 }
 
 // Used to Update the currently active scene
 vGameUpdate :: proc() {
 	assert(len(game.scenes) != 0, "CANNOT UPDATE SCENE.. \n Did you add the scene to the game with vAddScene()")
-	game.activeScene.update()
+	game.activeScene.update(game.activeScene)
 }
 
 // Used to Draw the currently active scene
 vGameDraw :: proc() {
 	assert(len(game.scenes) != 0, "CANNOT DRAW SCENE.. \n Did you add the scene to the game with vAddScene()")
-	game.activeScene.draw()
+	game.activeScene.draw(game.activeScene)
 }
 
 // Used to close and End the currently active scene
 vGameEnd :: proc() {
 	assert(len(game.scenes) != 0, "CANNOT END SCENE.. \n Did you add the scene to the game with vAddScene()")
-	game.activeScene.end()
+	game.activeScene.end(game.activeScene)
 }
 
 
@@ -120,9 +120,9 @@ vGotoScene :: proc(id: string) -> (ret: ^Scene) {
 		if scene.id == id { ret = scene } 
 	}
 	assert(ret.id != "", "CANNOT FIND SCENE \n Did you add it to the game struct?")
-	game.activeScene.end()
+	game.activeScene.end(game.activeScene)
 	game.activeScene = ret
-	game.activeScene.init()
+	game.activeScene.init(game.activeScene)
 	return ret
 }
 

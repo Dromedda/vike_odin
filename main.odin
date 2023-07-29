@@ -15,32 +15,26 @@ scenes : []^Scene = {
 
 main :: proc() {
 	r.InitWindow(game.width, game.height, "VIKE")
+	r.SetWindowPosition(0, 0) // we do this, otherwise it ends up in the middle ! THIS IS LOCAL TO ME !
+
 	r.SetTargetFPS(60)
 	defer r.CloseWindow() // Defer defers the call to the end of the scope
-
 	vAddScene(&SceneMain) 
-
 	vGameInit()
 	defer vGameEnd()
 
 	for !r.WindowShouldClose() {
 		vGameUpdate()
 		CheckDebugToggle()
+
 		r.BeginDrawing()
 			vGameDraw()
-			if game.debug { 
-				vDebugDrawLog() 
-			}
+			if game.debug { vDebugDrawLog(); }
 		r.EndDrawing()
 	}
 }
 
 CheckDebugToggle :: proc() {
-	if vkeyp(r.KeyboardKey.F5) {
-		game.debug = !game.debug
-	}
-
-	if vkeyp(r.KeyboardKey.F6) {
-		vDebugLogClear()
-	}
+	if vkeyp(r.KeyboardKey.F5) { game.debug = !game.debug }
+	if vkeyp(r.KeyboardKey.F6) { vDebugLogClear() }
 }
