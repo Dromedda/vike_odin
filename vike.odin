@@ -9,7 +9,7 @@ DEBUG_LOG_LINE_HEIGHT :: 16
 DEBUG_LOG_CONSOLE_OFFSET :: 8
 DEBUG_LOG_LINE_OFFSET :: 4
 
-// -- Data -- // 
+// -- @Data -- // 
 
 // Main Game Struct, used to keep track of the state of the game
 Game :: struct {
@@ -46,6 +46,7 @@ Sprite :: struct {
 	current_animation: i32, // The Row in the sheet
 	animation_frames: [dynamic]i32,
 	frame_time: [dynamic]f32,
+	target_fps: [dynamic] f32,
 	origin: r.Vector2,
 	flippedH: bool,
 	flippedV: bool,
@@ -57,7 +58,7 @@ Tile :: struct {
 	x,y,w,h : i32,
 }
 
-// -- Flow -- // 
+// -- @Flow -- // 
 
 // Used to Init the currently active scene
 vGameInit :: proc() {
@@ -84,8 +85,9 @@ vGameEnd :: proc() {
 }
 
 
-// -- Scene & Entity Handling -- // 
+// -- @Scene & @Entity Handling -- // 
 
+// Creates an entity of type t, as long as the type derives from entity
 vCreateEntity :: proc($T: typeid, name: string) -> T {
 	t := new(T)
 	t.name = name
@@ -122,8 +124,9 @@ vGotoScene :: proc(id: string) -> (ret: ^Scene) {
 }
 
 
-// -- "Physics" -- // 
+// -- "@Physics" -- // 
 
+// Returns a list of all colliding entities,
 vGetAllCollidingEntities :: proc(self: ^Entity, scn: ^Scene) -> (ret:[dynamic]Entity) {
 	for i := 0; i < len(scn.entities); i += 1 {
 		if (vCheckMeetingE(self, &scn.entities[i])) {
@@ -144,7 +147,7 @@ vCheckMeetingE :: proc(a: ^Entity, b: ^Entity) -> bool {
 	return false
 }
 
-// -- Sprite Drawing -- // 
+// -- @Sprite Drawing -- // 
 
 // Create a drawable sprite, useful when using vDrawSprite
 vCreateSprite :: proc(txt: cstring, frame_width: f32, frame_height: f32, origin_x: f32, origin_y: f32) -> (spr: Sprite){
@@ -158,14 +161,16 @@ vCreateSprite :: proc(txt: cstring, frame_width: f32, frame_height: f32, origin_
 	for i:i32=0; i < max_anims; i+= 1 {
 		append(&spr.animation_frames, 0)
 		append(&spr.frame_time, 0)
+		append(&spr.target_fps, 0)
 	}
 	return
 }
 
 // TODO: Set the frame time here instead of in the update so that each animation has its own frame times
 // Creates an Animation, param animation is the row(Indexed from 0) in the sheet to use
-vCreateAnimation :: proc(spr: Sprite, animation: i32, num_of_frames: i32,) {
+vCreateAnimation :: proc(spr: Sprite, animation: i32, num_of_frames: i32, target_fps: f32) {
 	spr.animation_frames[animation] = num_of_frames 
+	spr.target_fps[animation] = target_fps
 }
 
 // Loads a texture, this Proc is quite useless right now
@@ -189,13 +194,17 @@ vGetCurrentAnimation :: proc(spr: ^Sprite) -> (i32) {
 	return spr.current_animation
 }
 
+vSetAnimationFPS :: proc(spr: ^Sprite, animation: i32, target_fps: f32) {
+	spr.target_fps[animation] = target_fps
+}
+
 // Updates the frame times of the currently active animation in a sprite 
-vUpdateAnimation :: proc(spr: ^Sprite, target_fps: f32) {
+vUpdateAnimation :: proc(spr: ^Sprite) {
 	spr.frame_time[spr.current_animation] += r.GetFrameTime()
 	if spr.current_frame > spr.animation_frames[spr.current_animation] {
 		spr.current_frame = 0
 	}
-	if (spr.frame_time[spr.current_animation] >= 1 / target_fps ) {
+	if (spr.frame_time[spr.current_animation] >= 1 / spr.target_fps[spr.current_animation]) {
 		if (spr.current_frame < spr.animation_frames[spr.current_animation]-1) {
 			spr.current_frame += 1
 		} else {
@@ -211,7 +220,7 @@ vUnloadTexture2d :: proc(tx: r.Texture2D) {
 }
 
 
-// -- Random Utils -- //
+// -- @Random @Utils -- //
 
 // Yeets a string to the term and in game log 
 log :: proc(str: string) {
@@ -237,6 +246,7 @@ vBenchmarkTimerLog :: proc(inst: string) -> f64{
 
 @(private="file")
 debugStringLog : [dynamic]cstring
+// Print Something to the "ingame log". we'd wanna accept multiple params 
 vDebugLog :: proc(str: cstring) {
 	inject_at(&debugStringLog, 0, str)
 	if (len(debugStringLog) > DEBUG_LOG_TOTAL_LIMIT) {
@@ -244,6 +254,7 @@ vDebugLog :: proc(str: cstring) {
 	}
 }
 
+// Draws the debug log in the top left corner
 vDebugDrawLog :: proc() {
 	if (len(debugStringLog) > 0) {
 		for i := 0; i < len(debugStringLog); i += 1 { 
@@ -256,12 +267,13 @@ vDebugDrawLog :: proc() {
 	}
 }
 
+// Clears all the debug log entries
 vDebugLogClear :: proc() {
 	clear(&debugStringLog)
 }
 
 
-// -- Input -- // 
+// -- @Input -- // 
 
 // Checks if provided key has been pressed.
 vkeyp :: proc(key: r.KeyboardKey) -> bool {

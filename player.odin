@@ -20,8 +20,8 @@ PlayerInit :: proc(self: ^Player, xx: i32, yy: i32) {
 	self.sprint_multiplyer = 2
 	self.facing_dir = 1
 	self.sprite = vCreateSprite("./Assets/player.png", 16, 16, 0, 0)
-	vCreateAnimation(self.sprite, 0, 3)
-	vCreateAnimation(self.sprite, 1, 11)
+	vCreateAnimation(self.sprite, 0, 3, 4)
+	vCreateAnimation(self.sprite, 1, 11, 24)
 	self.sprite.current_animation = 0
 }
 
@@ -34,14 +34,11 @@ PlayerUpdate :: proc(self: ^Player) {
 		self.facing_dir = f32(moveX)
 	}
 
-	target_anim_speed :f32 = 0
 
 	if (moveX != 0 || moveY != 0) {
 		self.sprite.current_animation = 1
-		target_anim_speed = 24
 	} else {
 		self.sprite.current_animation = 0
-		target_anim_speed = 4
 	}
 
 
@@ -49,7 +46,9 @@ PlayerUpdate :: proc(self: ^Player) {
 
 	if (vkeyd(r.KeyboardKey.LEFT_SHIFT)) {
 		spd = spd * self.sprint_multiplyer
-		target_anim_speed = target_anim_speed * 2
+		vSetAnimationFPS(&self.sprite, 1, 48)
+	} else {
+		vSetAnimationFPS(&self.sprite, 1, 24)
 	}
 
 	if (moveX != 0 && moveY != 0) { spd = spd / 1.2 }
@@ -57,7 +56,7 @@ PlayerUpdate :: proc(self: ^Player) {
 	self.x += moveX * i32(spd) 
 	self.y += moveY * i32(spd) 
 
-	vUpdateAnimation(&self.sprite, target_anim_speed)
+	vUpdateAnimation(&self.sprite)
 }
 
 PlayerDraw :: proc(self: ^Player) {
