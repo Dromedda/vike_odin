@@ -62,9 +62,12 @@ PlayerUpdate :: proc(self: ^Player) {
 PlayerDraw :: proc(self: ^Player) {
 	drawColor := r.BLUE
 	ents := vGetAllCollidingEntities(self, game.activeScene) 
-	for e in ents {
+	if (len(ents) > 0) { // Check if we are colliding with something at all
 		drawColor = r.RED
 	}
+	//for e in ents { // Go through every entity we are colliding with
+		// f.println(e)
+	//}
 
 	r.DrawRectangle(self.x - i32(self.sprite.origin.x), self.y - i32(self.sprite.origin.y), self.w, self.h, drawColor)
 	vDrawSprite(self.sprite, self.x, self.y, 4, 4, 0, r.WHITE)

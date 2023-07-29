@@ -194,6 +194,7 @@ vGetCurrentAnimation :: proc(spr: ^Sprite) -> (i32) {
 	return spr.current_animation
 }
 
+// Sets the TargetFPS for an animation for a sprite
 vSetAnimationFPS :: proc(spr: ^Sprite, animation: i32, target_fps: f32) {
 	spr.target_fps[animation] = target_fps
 }
