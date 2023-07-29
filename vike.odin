@@ -166,7 +166,6 @@ vCreateSprite :: proc(txt: cstring, frame_width: f32, frame_height: f32, origin_
 	return
 }
 
-// TODO: Set the frame time here instead of in the update so that each animation has its own frame times
 // Creates an Animation, param animation is the row(Indexed from 0) in the sheet to use
 vCreateAnimation :: proc(spr: Sprite, animation: i32, num_of_frames: i32, target_fps: f32) {
 	spr.animation_frames[animation] = num_of_frames 
@@ -193,6 +192,14 @@ vDrawSprite :: proc(spr: Sprite, x: i32, y:i32, sclx:f32, scly:f32, rot:f32, col
 vGetCurrentAnimation :: proc(spr: ^Sprite) -> (i32) {
 	return spr.current_animation
 }
+
+vSetCurrentAnimation :: proc(spr: ^Sprite, anim: i32) {
+	if (spr.current_animation != anim) {
+		spr.current_frame = 0; 
+		spr.frame_time[anim] = 0
+	}
+	spr.current_animation = anim 
+} 
 
 // Sets the TargetFPS for an animation for a sprite
 vSetAnimationFPS :: proc(spr: ^Sprite, animation: i32, target_fps: f32) {

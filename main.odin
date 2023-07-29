@@ -4,8 +4,8 @@ import r "vendor:raylib"
 import f "core:fmt"
 
 game:Game = {
-	width = 900,
-	height = 600,
+	width = 1280,
+	height = 720,
 	debug = false,
 }
 
@@ -28,7 +28,14 @@ main :: proc() {
 		CheckDebugToggle()
 		r.BeginDrawing()
 			vGameDraw()
-			if(game.debug) { vDebugDrawLog() }
+			if game.debug { 
+				vDebugDrawLog() 
+				for i := 0; i < len(game.activeScene.entities); i+=1 {
+					e := game.activeScene.entities[i]	
+					// TODO: Add an active camera to the game struct so that we can access it here in drawing
+					//r.DrawRectangle(e.x, e.y, e.w, e.h, r.RED)	
+				}
+			}
 		r.EndDrawing()
 	}
 }

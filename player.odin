@@ -34,11 +34,10 @@ PlayerUpdate :: proc(self: ^Player) {
 		self.facing_dir = f32(moveX)
 	}
 
-
 	if (moveX != 0 || moveY != 0) {
-		self.sprite.current_animation = 1
+		vSetCurrentAnimation(&self.sprite, 1)
 	} else {
-		self.sprite.current_animation = 0
+		vSetCurrentAnimation(&self.sprite, 0)
 	}
 
 

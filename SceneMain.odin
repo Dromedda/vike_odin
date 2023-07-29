@@ -12,6 +12,7 @@ SceneMain : Scene = {
 }
 
 player : Player
+testEnt : Entity
 floor : Entity 
 camera : r.Camera2D	
 
@@ -21,6 +22,17 @@ SceneMainInit :: proc () {
 	player = vCreateEntity(Player, "player")
 	vAddEntityToScene(player, &SceneMain)
 	PlayerInit(&player, 0, 0)
+
+	testEnt = vCreateEntity(Entity, "testEnt")
+	{
+		using testEnt
+		x, y = 100, 100
+		w, h = 64, 64
+		sclx, scly = 1, 1
+		sprite = vCreateSprite("./Assets/test_sheet.png", 64, 64, 0, 0)
+		vCreateAnimation(sprite, 0, 5, 2)
+		vAddEntityToScene(testEnt, &SceneMain)
+	}
 
 	floor = vCreateEntity(Entity, "floor")
 	{
@@ -52,6 +64,9 @@ SceneMainDraw :: proc () {
 	r.DrawRectangleGradientV(0, 0, game.width, game.height, r.SKYBLUE, r.DARKPURPLE)
 
 	r.BeginMode2D(camera)
+
+	vUpdateAnimation(&testEnt.sprite)
+	vDrawSprite(testEnt.sprite, testEnt.x, testEnt.y, 1, 1, 0, r.WHITE)
 
 	PlayerDraw(&player)
 	r.DrawTexture(floor.sprite.texture, floor.x, floor.y, r.WHITE)
