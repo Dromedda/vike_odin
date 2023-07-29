@@ -19,6 +19,8 @@ camera : r.Camera2D
 SceneMainInit :: proc () {
 	log("SCENE MAIN LOADING")
 
+	game.camera = camera
+
 	player = vCreateEntity(Player, "player")
 	vAddEntityToScene(player, &SceneMain)
 	PlayerInit(&player, 0, 0)
@@ -63,19 +65,17 @@ SceneMainDraw :: proc () {
 	r.ClearBackground(r.LIGHTGRAY)
 	r.DrawRectangleGradientV(0, 0, game.width, game.height, r.SKYBLUE, r.DARKPURPLE)
 
-	r.BeginMode2D(camera)
-
-	vUpdateAnimation(&testEnt.sprite)
-	vDrawSprite(testEnt.sprite, testEnt.x, testEnt.y, 1, 1, 0, r.WHITE)
-
-	PlayerDraw(&player)
-	r.DrawTexture(floor.sprite.texture, floor.x, floor.y, r.WHITE)
-
+	r.BeginMode2D(camera) // everything drawn here gets affected by the camera 
+		vUpdateAnimation(&testEnt.sprite)
+		vDrawSprite(testEnt.sprite, testEnt.x, testEnt.y, 1, 1, 0, r.WHITE)
+		r.DrawTexture(floor.sprite.texture, floor.x, floor.y, r.WHITE)
+		PlayerDraw(&player)
 	r.EndMode2D()
 }
 
 SceneMainEnd :: proc () {
 	log("CLOSING MAIN SCENE")
+	vUnloadTexture2d(testEnt.sprite.texture)
 	vUnloadTexture2d(floor.sprite.texture)
 	PlayerEnd(&player)
 }

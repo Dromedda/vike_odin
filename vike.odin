@@ -18,6 +18,7 @@ Game :: struct {
 	width : i32,
 	height : i32,
 	debug : bool,
+	camera: r.Camera2D,
 }
 
 // An Entity is a thing that has logic, similar to an object/node in engines like GMS and Godot
@@ -26,6 +27,7 @@ Entity :: struct {
 	x,y,w,h: i32,
 	sclx, scly: f32,
 	sprite : Sprite,
+	depth : i32,
 }
 
 // A scene is litterly just a scene, with a few "methods" which handle the scene state and interactivity
@@ -36,6 +38,7 @@ Scene :: struct {
 	update: proc(),
 	draw: proc(),
 	end: proc(),	
+	//using DefaultScene, this might be worth a shot ?
 }
 
 Sprite :: struct {

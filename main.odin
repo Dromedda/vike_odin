@@ -30,11 +30,6 @@ main :: proc() {
 			vGameDraw()
 			if game.debug { 
 				vDebugDrawLog() 
-				for i := 0; i < len(game.activeScene.entities); i+=1 {
-					e := game.activeScene.entities[i]	
-					// TODO: Add an active camera to the game struct so that we can access it here in drawing
-					//r.DrawRectangle(e.x, e.y, e.w, e.h, r.RED)	
-				}
 			}
 		r.EndDrawing()
 	}
