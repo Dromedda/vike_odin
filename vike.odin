@@ -256,6 +256,7 @@ vDebugLog :: proc(str: cstring) {
 
 // Draws the debug log in the top left corner
 vDebugDrawLog :: proc() {
+	r.DrawRectangle(DEBUG_LOG_CONSOLE_OFFSET/2, 8, 400, i32(DEBUG_LOG_CONSOLE_OFFSET+ ( len(debugStringLog) * DEBUG_LOG_LINE_HEIGHT + DEBUG_LOG_LINE_OFFSET)), r.Color{20, 20, 20, 90})
 	if (len(debugStringLog) > 0) {
 		for i := 0; i < len(debugStringLog); i += 1 { 
 			r.DrawText( debugStringLog[i],
