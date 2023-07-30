@@ -28,7 +28,6 @@ SceneMainInit :: proc (self: ^Scene) {
 		w, h = 400, 64
 		sclx, scly = 1, 1
 		sprite = vCreateSprite("./Assets/tile.png", 400, 200, 0, 0)
-		depth = 1
 		vAddEntityToScene(floor, &SceneMain)
 	}
 
@@ -39,7 +38,6 @@ SceneMainInit :: proc (self: ^Scene) {
 		w, h = 400, 64
 		sclx, scly = 1, 1
 		sprite = vCreateSprite("./Assets/tile.png", 400, 200, 0, 0)
-		depth = 1
 		vAddEntityToScene(floor2, &SceneMain)
 	}
 

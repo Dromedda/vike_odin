@@ -27,7 +27,6 @@ Entity :: struct {
 	x,y,w,h: i32,
 	sclx, scly: f32,
 	sprite : Sprite,
-	depth : i32,
 }
 
 // A scene is litterly just a scene, with a few "methods" which handle the scene state and interactivity
