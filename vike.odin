@@ -18,7 +18,7 @@ Game :: struct {
 	width : i32,
 	height : i32,
 	debug : bool,
-	camera: ^r.Camera2D,
+	camera: r.Camera2D,
 }
 
 // An Entity is a thing that has logic, similar to an object/node in engines like GMS and Godot
@@ -97,6 +97,16 @@ vCreateEntity :: proc($T: typeid, name: string) -> T {
 	return t^
 } 
 
+vGetEntity :: proc(name: string) -> Entity {
+	ret : Entity
+	for e in game.activeScene.entities {
+		if e.name == name{
+			ret = e
+		}
+	}
+	return ret
+}
+
 // Adds an entity to the scene
 vAddEntityToScene :: proc(e: Entity,scn: ^Scene) -> Scene {
 	assert(type_of(e) == Entity)
@@ -104,6 +114,7 @@ vAddEntityToScene :: proc(e: Entity,scn: ^Scene) -> Scene {
 	fmt.println("Added Entity::", e.name, " To Scene::", scn.id)
 	return scn^
 }
+
 
 // Adds a scene to the game, If no other scene has been added it will set the provided scene to active
 vAddScene :: proc(scn: ^Scene) {

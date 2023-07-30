@@ -55,9 +55,24 @@ PlayerUpdate :: proc(self: ^Player) {
 		if moveY != 0 { spd = spd / 1.2}
 	}
 
+	target := self
+	target.x += moveX * i32(spd)
+	target.y += moveY * i32(spd)
+	
+	floor := vGetEntity("floor") 
+	if (vCheckMeetingE(target, &floor)) {
+		vDebugLog("Touching Floor1")
+	}
+
+	floor2 := vGetEntity("floor2") 
+	if (vCheckMeetingE(target, &floor2)) {
+		vDebugLog("Touching Floor2")
+	}
+
 	// update anim's and apply speed
-	self.x += moveX * i32(spd)
-	self.y += moveY * i32(spd)
+	self.x = target.x
+	self.y = target.y
+
 	vUpdateAnimation(&self.sprite)
 }
 
