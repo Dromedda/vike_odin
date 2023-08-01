@@ -11,8 +11,6 @@ Player :: struct {
 }
 
 PlayerInit :: proc(self: ^Player, xx: i32, yy: i32) {	
-	log("CREATED PLAYER")
-
 	self.x = xx
 	self.y = yy
 	self.sclx = 4

@@ -93,15 +93,26 @@ vGameEnd :: proc() {
 vCreateEntity :: proc($T: typeid, name: string) -> T {
 	t := new(T)
 	t.name = name
+	s : []string = {"Created Entity :: ", name}
+	sc := strings.concatenate(s) 
+	vDebugLog(strings.clone_to_cstring(sc))
 	return t^
 } 
 
+// Get the entity from the specified scene
+vGetEntityInScene :: proc(scn: ^Scene, name: string) -> Entity {
+	ret : Entity
+	for e in scn.entities {
+		if e.name == name{ ret = e }
+	}
+	return ret
+}
+
+// Get the entity from the current active scene
 vGetEntity :: proc(name: string) -> Entity {
 	ret : Entity
 	for e in game.activeScene.entities {
-		if e.name == name{
-			ret = e
-		}
+		if e.name == name{ ret = e }
 	}
 	return ret
 }
