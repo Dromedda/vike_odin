@@ -90,8 +90,11 @@ PlayerDraw :: proc(self: ^Player) {
 
 	// Draw Self
 	vDrawSprite(self.sprite, self.x, self.y, self.sclx, self.scly, 0, r.WHITE)
-	r.DrawLine(self.x + 32, self.y + 32, targetx, targety, r.RED)
 
+	// Debug Drawing
+	if game.debug { 
+		r.DrawLine(self.x + 32, self.y + 32, targetx, targety, r.RED)
+	}
 }
 
 PlayerEnd :: proc(self:^Player) {

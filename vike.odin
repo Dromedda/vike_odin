@@ -269,6 +269,9 @@ vBenchmarkTimerLog :: proc(inst: string) -> f64{
 debugStringLog : [dynamic]cstring
 // Print Something to the "ingame log". we'd wanna accept multiple params 
 vDebugLog :: proc(str: cstring) {
+	// check if the previous entry is the same as the one we are adding and if so ignore it
+	if len(debugStringLog) > 0 { if debugStringLog[0] == str { return } }
+
 	inject_at(&debugStringLog, 0, str)
 	if (len(debugStringLog) > DEBUG_LOG_TOTAL_LIMIT) {
 		pop(&debugStringLog);
@@ -281,10 +284,10 @@ vDebugDrawLog :: proc() {
 	if (len(debugStringLog) > 0) {
 		for i := 0; i < len(debugStringLog); i += 1 { 
 			r.DrawText( debugStringLog[i],
-									8, 
-									i32(DEBUG_LOG_CONSOLE_OFFSET+ (i * DEBUG_LOG_LINE_HEIGHT + DEBUG_LOG_LINE_OFFSET)), 
-									DEBUG_LOG_LINE_HEIGHT, 
-									r.RED)
+				8, 
+				i32(DEBUG_LOG_CONSOLE_OFFSET+ (i * DEBUG_LOG_LINE_HEIGHT + DEBUG_LOG_LINE_OFFSET)), 
+				DEBUG_LOG_LINE_HEIGHT, 
+				r.RED)
 		}
 	}
 }
