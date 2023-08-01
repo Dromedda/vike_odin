@@ -93,8 +93,7 @@ vGameEnd :: proc() {
 vCreateEntity :: proc($T: typeid, name: string) -> T {
 	t := new(T)
 	t.name = name
-	s : []string = {"Created Entity :: ", name}
-	sc := strings.concatenate(s) 
+	sc := vStrConcat("Created Entity :: ", name)
 	vDebugLog(strings.clone_to_cstring(sc))
 	return t^
 } 
@@ -121,7 +120,6 @@ vGetEntityInScene :: proc(scn: ^Scene, name: string) -> Entity {
 vAddEntityToScene :: proc(e: Entity,scn: ^Scene) -> Scene {
 	assert(type_of(e) == Entity)
 	append(&scn.entities, e)
-	fmt.println("Added Entity::", e.name, " To Scene::", scn.id)
 	return scn^
 }
 
@@ -132,7 +130,8 @@ vAddScene :: proc(scn: ^Scene) {
 		game.activeScene = scn
 	}
 	append(&game.scenes, scn)
-	fmt.println("Added Scene To Game::", scn)
+	st := vStrConcat("Added Scene :: ", scn.id, " :: To Game")
+	vDebugLog(strings.clone_to_cstring(st))
 }
 
 // Goes to a scene, inits that scene and end the previusly active one.
@@ -276,9 +275,7 @@ debugStringLog : [dynamic]cstring
 vDebugLog :: proc(str: cstring) {
 	// check if the previous entry is the same as the one we are adding and if so ignore it
 	if len(debugStringLog) > 0 { if debugStringLog[0] == str { return } }
-
-	s :[]string = {"VIKE DEBUG :: ", string(str)}
-	st := strings.concatenate(s)
+	st := vStrConcat("VIKE DEBUG :: ", string(str))
 	fmt.println(st)
 
 	inject_at(&debugStringLog, 0, str)
@@ -322,4 +319,10 @@ vkeyr :: proc(key: r.KeyboardKey) -> bool {
 // Checks if the provided key is down.
 vkeyd :: proc(key: r.KeyboardKey) -> bool {
 	return r.IsKeyDown(key)
+}
+
+// -- @String Helpers -- // 
+vStrConcat :: proc(str: ..string) -> string {
+	s : []string = str[0:len(str)] 
+	return strings.concatenate(s)
 }

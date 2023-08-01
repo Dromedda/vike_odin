@@ -6,7 +6,6 @@ import f "core:fmt"
 Player :: struct {
 	speed : f64,
 	sprint_multiplyer: f64,
-	facing_dir: f32,
 	using entity: Entity,
 }
 
@@ -19,7 +18,6 @@ PlayerInit :: proc(self: ^Player, xx: i32, yy: i32) {
 	self.h = 16 * i32(self.scly)
 	self.speed = 4
 	self.sprint_multiplyer = 2
-	self.facing_dir = 1
 	self.sprite = vCreateSprite("./Assets/player.png", 16, 16, 0, 0)
 
 	vCreateAnimation(self.sprite, 0, 3, 4) // idle
@@ -50,7 +48,6 @@ PlayerUpdate :: proc(self: ^Player) {
 
 	// Flip Player & normalize Diagonals
 	if moveX != 0 {
-		self.facing_dir = f32(moveX)
 		self.sprite.flippedH = (moveX < 0)
 		if moveY != 0 { self.speed = self.speed/ 1.2}
 	}
@@ -80,16 +77,16 @@ PlayerDraw :: proc(self: ^Player) {
 	ents := vGetAllCollidingEntities(self, game.activeScene) 
 	if (len(ents) > 0) { r.DrawRectangle(self.x - i32(self.sprite.origin.x), self.y - i32(self.sprite.origin.y), self.w, self.h, r.RED) }
 
+	// Draw Self
+	vDrawSprite(self.sprite, self.x, self.y, self.sclx, self.scly, 0, r.WHITE)
+
+	// Debug Drawing
 	moveX := (i32(vkeyd(r.KeyboardKey.D)) - i32(vkeyd(r.KeyboardKey.A)))
 	moveY := (i32(vkeyd(r.KeyboardKey.S)) - i32(vkeyd(r.KeyboardKey.W)))
 
 	targetx := (self.x + 32) + (moveX * i32(self.speed)) * 10
 	targety := (self.y + 32) + (moveY * i32(self.speed)) * 10
 
-	// Draw Self
-	vDrawSprite(self.sprite, self.x, self.y, self.sclx, self.scly, 0, r.WHITE)
-
-	// Debug Drawing
 	if game.debug { 
 		r.DrawLine(self.x + 32, self.y + 32, targetx, targety, r.RED)
 	}
