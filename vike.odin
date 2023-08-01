@@ -99,19 +99,19 @@ vCreateEntity :: proc($T: typeid, name: string) -> T {
 	return t^
 } 
 
-// Get the entity from the specified scene
-vGetEntityInScene :: proc(scn: ^Scene, name: string) -> Entity {
+// Get the entity from the current active scene
+vGetEntity :: proc(name: string) -> Entity {
 	ret : Entity
-	for e in scn.entities {
+	for e in game.activeScene.entities {
 		if e.name == name{ ret = e }
 	}
 	return ret
 }
 
-// Get the entity from the current active scene
-vGetEntity :: proc(name: string) -> Entity {
+// Get the entity from the specified scene
+vGetEntityInScene :: proc(scn: ^Scene, name: string) -> Entity {
 	ret : Entity
-	for e in game.activeScene.entities {
+	for e in scn.entities {
 		if e.name == name{ ret = e }
 	}
 	return ret
@@ -190,17 +190,6 @@ vCreateSprite :: proc(txt: cstring, frame_width: f32, frame_height: f32, origin_
 	return
 }
 
-// Creates an Animation, param animation is the row(Indexed from 0) in the sheet to use
-vCreateAnimation :: proc(spr: Sprite, animation: i32, num_of_frames: i32, target_fps: f32) {
-	spr.animation_frames[animation] = num_of_frames 
-	spr.target_fps[animation] = target_fps
-}
-
-// Loads a texture, this Proc is quite useless right now
-vLoadTexture2d :: proc(src: cstring) -> (r.Texture2D) {
-	return r.LoadTexture(src)
-}
-
 // Draws a Create sprite
 vDrawSprite :: proc(spr: Sprite, x: i32, y:i32, sclx:f32, scly:f32, rot:f32, col:r.Color) {
 	srcx := f32(spr.current_frame) * spr.frame_width
@@ -210,6 +199,12 @@ vDrawSprite :: proc(spr: Sprite, x: i32, y:i32, sclx:f32, scly:f32, rot:f32, col
 	if (spr.flippedV) {	src = r.Rectangle{srcx, srcy, f32(spr.frame_width), f32(-spr.frame_height)}	}
 	dest := r.Rectangle{f32(x), f32(y), spr.frame_width * sclx, spr.frame_height * scly}
 	r.DrawTexturePro(spr.texture, src, dest, spr.origin, rot, col)
+}
+
+// Creates an Animation, param animation is the row(Indexed from 0) in the sheet to use
+vCreateAnimation :: proc(spr: Sprite, animation: i32, num_of_frames: i32, target_fps: f32) {
+	spr.animation_frames[animation] = num_of_frames 
+	spr.target_fps[animation] = target_fps
 }
 
 // Gets the current active sprite.. Same as spr.current_animation
@@ -246,6 +241,11 @@ vUpdateAnimation :: proc(spr: ^Sprite) {
 	}
 }
 
+// Loads a texture, this Proc is quite useless right now
+vLoadTexture2d :: proc(src: cstring) -> (r.Texture2D) {
+	return r.LoadTexture(src)
+}
+
 // Same as with vLoadTexture, this Proc is quite useless right now
 vUnloadTexture2d :: proc(tx: r.Texture2D) {
 	r.UnloadTexture(tx)
@@ -253,12 +253,6 @@ vUnloadTexture2d :: proc(tx: r.Texture2D) {
 
 
 // -- @Random @Utils -- //
-
-// Yeets a string to the term and in game log 
-log :: proc(str: string) {
-	fmt.println("VIKE::LOG::", str)
-	vDebugLog(strings.clone_to_cstring(str))
-}
 
 @(private="file")
 benchmarkTimerStartTime : f64
@@ -282,6 +276,10 @@ debugStringLog : [dynamic]cstring
 vDebugLog :: proc(str: cstring) {
 	// check if the previous entry is the same as the one we are adding and if so ignore it
 	if len(debugStringLog) > 0 { if debugStringLog[0] == str { return } }
+
+	s :[]string = {"VIKE DEBUG :: ", string(str)}
+	st := strings.concatenate(s)
+	fmt.println(st)
 
 	inject_at(&debugStringLog, 0, str)
 	if (len(debugStringLog) > DEBUG_LOG_TOTAL_LIMIT) {
