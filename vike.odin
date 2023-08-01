@@ -321,7 +321,21 @@ vkeyd :: proc(key: r.KeyboardKey) -> bool {
 	return r.IsKeyDown(key)
 }
 
+// -- @Geometry Helpers -- //
+
+// Draw An outline rectangle
+vDebugRecOutline :: proc(x,y,w,h : i32, c:r.Color) {
+		r.DrawLine(x, y, x + w, y, c)
+		r.DrawLine(x + w, y, x + w, y + h, c)
+		r.DrawLine(x + w, y + h, x, y + h, c)
+		r.DrawLine(x, y + h, x, y, c)
+		r.DrawLine(x, y, x + w, y + h, c)
+}
+
+
 // -- @String Helpers -- // 
+
+// Concatenate params of strings together into one
 vStrConcat :: proc(str: ..string) -> string {
 	s : []string = str[0:len(str)] 
 	return strings.concatenate(s)

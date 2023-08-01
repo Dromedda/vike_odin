@@ -89,6 +89,7 @@ PlayerDraw :: proc(self: ^Player) {
 
 	if game.debug { 
 		r.DrawLine(self.x + 32, self.y + 32, targetx, targety, r.RED)
+		vDebugRecOutline(self.x, self.y, self.w, self.h, r.RED)
 	}
 }
 
