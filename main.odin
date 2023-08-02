@@ -29,7 +29,7 @@ main :: proc() {
 
 		r.BeginDrawing()
 			vGameDraw()
-			if game.debug { vDebugDrawLog(); }
+			if game.debug { vDebugDrawLog() }
 		r.EndDrawing()
 	}
 }

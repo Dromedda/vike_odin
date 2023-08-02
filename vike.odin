@@ -213,7 +213,7 @@ vGetCurrentAnimation :: proc(spr: ^Sprite) -> (i32) {
 
 vSetCurrentAnimation :: proc(spr: ^Sprite, anim: i32) {
 	if (spr.current_animation != anim) {
-		spr.current_frame = 0; 
+		spr.current_frame = 0 
 		spr.frame_time[anim] = 0
 	}
 	spr.current_animation = anim 
@@ -280,7 +280,7 @@ vDebugLog :: proc(str: cstring) {
 
 	inject_at(&debugStringLog, 0, str)
 	if (len(debugStringLog) > DEBUG_LOG_TOTAL_LIMIT) {
-		pop(&debugStringLog);
+		pop(&debugStringLog)
 	}
 }
 
