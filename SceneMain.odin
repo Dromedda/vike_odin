@@ -49,8 +49,14 @@ SceneMainUpdate :: proc (self: ^Scene) {
 	PlayerUpdate(&player)
 	game.camera.target = r.Vector2{f32(player.x), f32(player.y)}
 	if (game.debug) {
-		if vkeyp(r.KeyboardKey.Q) { game.camera.zoom = game.camera.zoom - 0.1; vDebugLog("Camera Zoom Decreased by 0.1") }
-		if vkeyp(r.KeyboardKey.E) { game.camera.zoom = game.camera.zoom + 0.1; vDebugLog("Camera Zoom Increased by 0.1") }
+		if vkeyp(r.KeyboardKey.Q) { 
+			game.camera.zoom = game.camera.zoom - 0.1
+			vDebugLog("Camera Zoom Decreased by 0.1") 
+		}
+		if vkeyp(r.KeyboardKey.E) { 
+			game.camera.zoom = game.camera.zoom + 0.1
+			vDebugLog("Camera Zoom Increased by 0.1") 
+		}
 	}
 }
 

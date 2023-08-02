@@ -194,8 +194,8 @@ vDrawSprite :: proc(spr: Sprite, x: i32, y:i32, sclx:f32, scly:f32, rot:f32, col
 	srcx := f32(spr.current_frame) * spr.frame_width
 	srcy := f32(spr.current_animation) * spr.frame_height
 	src := r.Rectangle{srcx, srcy, f32(spr.frame_width), f32(spr.frame_height)}
-	if (spr.flippedH) {	src = r.Rectangle{srcx, srcy, f32(-spr.frame_width), f32(spr.frame_height)} }
-	if (spr.flippedV) {	src = r.Rectangle{srcx, srcy, f32(spr.frame_width), f32(-spr.frame_height)}	}
+	if spr.flippedH {src.width = f32(-spr.frame_width)}
+	if spr.flippedV {src.height = f32(-spr.frame_height)}
 	dest := r.Rectangle{f32(x), f32(y), spr.frame_width * sclx, spr.frame_height * scly}
 	r.DrawTexturePro(spr.texture, src, dest, spr.origin, rot, col)
 }
@@ -325,11 +325,11 @@ vkeyd :: proc(key: r.KeyboardKey) -> bool {
 
 // Draw An outline rectangle
 vDebugRecOutline :: proc(x,y,w,h : i32, c:r.Color) {
-		r.DrawLine(x, y, x + w, y, c)
-		r.DrawLine(x + w, y, x + w, y + h, c)
-		r.DrawLine(x + w, y + h, x, y + h, c)
-		r.DrawLine(x, y + h, x, y, c)
-		r.DrawLine(x, y, x + w, y + h, c)
+	r.DrawLine(x, y, x + w, y, c)
+	r.DrawLine(x + w, y, x + w, y + h, c)
+	r.DrawLine(x + w, y + h, x, y + h, c)
+	r.DrawLine(x, y + h, x, y, c)
+	r.DrawLine(x, y, x + w, y + h, c)
 }
 
 
