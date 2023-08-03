@@ -19,7 +19,7 @@ SceneMainInit :: proc (self: ^Scene) {
 	game.camera = r.Camera2D {}
 	player = vCreateEntity(Player, "player")
 	vAddEntityToScene(player, &SceneMain)
-	PlayerInit(&player, 0, 0)
+	PlayerInit(&player, -200, -100)
 
 	floor = vCreateEntity(Entity, "floor")
 	{

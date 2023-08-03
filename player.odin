@@ -65,9 +65,11 @@ PlayerUpdate :: proc(self: ^Player) {
 		vDebugLog("Touching Floor2")
 	}
 
-	// update anim's and apply speed
-	self.x += targetx
-	self.y += targety
+	playerCollTo := vCreateEntityOffset(self, targetx, targety)
+	if len(vGetAllCollidingEntities(playerCollTo, game.activeScene)) == 0 {
+		self.x += targetx
+		self.y += targety
+	}  
 
 	vUpdateAnimation(&self.sprite)
 }

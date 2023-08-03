@@ -123,7 +123,6 @@ vAddEntityToScene :: proc(e: Entity,scn: ^Scene) -> Scene {
 	return scn^
 }
 
-
 // Adds a scene to the game, If no other scene has been added it will set the provided scene to active
 vAddScene :: proc(scn: ^Scene) {
 	if (len(game.scenes) == 0) {
@@ -168,6 +167,21 @@ vCheckMeetingE :: proc(a: ^Entity, b: ^Entity) -> bool {
 		return true
 	}
 	return false
+}
+
+// creates a new entity with the offset to its position ( useful for when checking collisions )
+vCreateEntityOffset :: proc(e: Entity, xOff, yOff: i32) -> ^Entity {
+	ret := Entity {
+		e.name,
+		e.x + xOff, 
+		e.y + yOff, 
+		e.w,
+		e.h,
+		e.sclx,
+		e.scly,
+		e.sprite, 
+	}
+	return &ret
 }
 
 // -- @Sprite Drawing -- // 
