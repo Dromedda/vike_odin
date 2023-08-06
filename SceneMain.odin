@@ -41,8 +41,8 @@ SceneMainInit :: proc (self: ^Scene) {
 		vAddEntityToScene(floor2, &SceneMain)
 	}
 
-	game.camera.zoom = 1.5
 	game.camera.offset = r.Vector2{f32(game.width/2), f32(game.height/2)}
+	game.camera.zoom = 1
 }
 
 SceneMainUpdate :: proc (self: ^Scene) {

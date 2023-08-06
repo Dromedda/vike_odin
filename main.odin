@@ -31,6 +31,10 @@ main :: proc() {
 			vGameDraw()
 			if game.debug { vDebugDrawLog() }
 		r.EndDrawing()
+
+		if (r.IsWindowResized()) {
+			vAutoAdjustWindow(&game.camera)
+		}
 	}
 }
 

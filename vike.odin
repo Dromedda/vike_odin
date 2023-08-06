@@ -9,7 +9,8 @@ DEBUG_LOG_LINE_HEIGHT :: 16
 DEBUG_LOG_CONSOLE_OFFSET :: 8
 DEBUG_LOG_LINE_OFFSET :: 4
 
-// -- @Data -- // 
+
+// -- @Structs -- // 
 
 // Main Game Struct, used to keep track of the state of the game
 Game :: struct {
@@ -17,6 +18,8 @@ Game :: struct {
 	activeScene : ^Scene,
 	width : i32,
 	height : i32,
+	windowScaleX: f32,
+	windowScaleY: f32,
 	debug : bool,
 	camera: r.Camera2D,
 }
@@ -60,6 +63,7 @@ Tile :: struct {
 	x,y,w,h : i32,
 }
 
+
 // -- @Flow -- // 
 
 // Used to Init the currently active scene
@@ -84,6 +88,22 @@ vGameDraw :: proc() {
 vGameEnd :: proc() {
 	assert(len(game.scenes) != 0, "CANNOT END SCENE.. \n Did you add the scene to the game with vAddScene()")
 	game.activeScene.end(game.activeScene)
+}
+
+// -- @Window -- // 
+vAutoAdjustWindow :: proc(cam: ^r.Camera2D) {
+	w := r.GetScreenWidth()
+	h := r.GetScreenHeight()
+	vDebugLog("Resized Window")
+	r.SetWindowSize(w, h)
+	// FIX : This is broken lul
+	cam.zoom = f32(h*2/game.height)
+	if cam.zoom == 0 {
+		cam.zoom = 1
+	}
+	game.width = w
+	game.height = h
+	game.camera.offset = r.Vector2{f32(game.width/2), f32(game.height/2)}
 }
 
 
@@ -183,6 +203,7 @@ vCreateEntityOffset :: proc(e: Entity, xOff, yOff: i32) -> ^Entity {
 	}
 	return &ret
 }
+
 
 // -- @Sprite Drawing -- // 
 
@@ -298,6 +319,12 @@ vDebugLog :: proc(str: cstring) {
 	}
 }
 
+// returns the sign of the integer
+vSign :: proc(x: int) -> int{
+	if x > 0 { return 1 } else if x < 0 { return -1 }
+	return 0
+}
+
 // Draws the debug log in the top left corner
 vDebugDrawLog :: proc() {
 	r.DrawRectangle(DEBUG_LOG_CONSOLE_OFFSET/2, 8, 400, i32(DEBUG_LOG_CONSOLE_OFFSET+ ( len(debugStringLog) * DEBUG_LOG_LINE_HEIGHT + DEBUG_LOG_LINE_OFFSET)), r.Color{20, 20, 20, 90})
@@ -334,6 +361,7 @@ vkeyr :: proc(key: r.KeyboardKey) -> bool {
 vkeyd :: proc(key: r.KeyboardKey) -> bool {
 	return r.IsKeyDown(key)
 }
+
 
 // -- @Geometry Helpers -- //
 

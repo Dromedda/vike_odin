@@ -55,21 +55,13 @@ PlayerUpdate :: proc(self: ^Player) {
 	targetx := (moveX * i32(self.speed))
 	targety := (moveY * i32(self.speed))
 
-	floor := vGetEntity("floor") 
-	if (vCheckMeetingE(self, &floor)) {
-		vDebugLog("Touching Floor1")
-	}
-
-	floor2 := vGetEntity("floor2") 
-	if (vCheckMeetingE(self, &floor2)) {
-		vDebugLog("Touching Floor2")
-	}
-
 	playerCollTo := vCreateEntityOffset(self, targetx, targety)
 	if len(vGetAllCollidingEntities(playerCollTo, game.activeScene)) == 0 {
 		self.x += targetx
 		self.y += targety
-	}  
+	} else {
+		vDebugLog("Player Collided!")
+	}
 
 	vUpdateAnimation(&self.sprite)
 }
