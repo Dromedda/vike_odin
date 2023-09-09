@@ -3,7 +3,7 @@ package main
 import r "vendor:raylib"
 import f "core:fmt"
 
-game:Game = {
+game: Game = {
 	width = 1280,
 	height = 720,
 	debug = false,

@@ -69,25 +69,25 @@ Tile :: struct {
 // Used to Init the currently active scene
 vGameInit :: proc() {
 	assert(len(game.scenes) != 0, "CANNOT INIT SCENE.. \n Did you add the scene to the game with vAddScene()")
-	game.activeScene.init(game.activeScene)
+	game.activeScene->init()
 }
 
 // Used to Update the currently active scene
 vGameUpdate :: proc() {
 	assert(len(game.scenes) != 0, "CANNOT UPDATE SCENE.. \n Did you add the scene to the game with vAddScene()")
-	game.activeScene.update(game.activeScene)
+	game.activeScene->update()
 }
 
 // Used to Draw the currently active scene
 vGameDraw :: proc() {
 	assert(len(game.scenes) != 0, "CANNOT DRAW SCENE.. \n Did you add the scene to the game with vAddScene()")
-	game.activeScene.draw(game.activeScene)
+	game.activeScene->draw()
 }
 
 // Used to close and End the currently active scene
 vGameEnd :: proc() {
 	assert(len(game.scenes) != 0, "CANNOT END SCENE.. \n Did you add the scene to the game with vAddScene()")
-	game.activeScene.end(game.activeScene)
+	game.activeScene->end()
 }
 
 // -- @Window -- // 
