@@ -6,6 +6,7 @@ import f "core:fmt"
 Player :: struct {
 	speed : f64,
 	sprint_multiplyer: f64,
+	holding: Item,
 	using entity: Entity,
 }
 

@@ -76,6 +76,7 @@ vGameInit :: proc() {
 vGameUpdate :: proc() {
 	assert(len(game.scenes) != 0, "CANNOT UPDATE SCENE.. \n Did you add the scene to the game with vAddScene()")
 	game.activeScene->update()
+	debugTimeSinceLastLog += r.GetFrameTime()
 }
 
 // Used to Draw the currently active scene
@@ -311,16 +312,25 @@ vBenchmarkTimerLog :: proc(inst: string) -> f64{
 
 @(private="file")
 debugStringLog : [dynamic]cstring
+
+@(private="file")
+debugTimeSinceLastLog: f32
+
 // Print Something to the "ingame log". we'd wanna accept multiple params 
 vDebugLog :: proc(str: cstring) {
-	// check if the previous entry is the same as the one we are adding and if so ignore it
-	if len(debugStringLog) > 0 { if debugStringLog[0] == str { return } }
-	st := vStrConcat("VIKE DEBUG :: ", string(str))
-	fmt.println(st)
+	debug_identical_interval: f32 = 1
+	if (debugTimeSinceLastLog < debug_identical_interval) {
+		if len(debugStringLog) > 0 { if debugStringLog[0] == str { return } }
+	} else {
+		st := vStrConcat("VIKE DEBUG :: ", string(str))
+		fmt.println(st)
 
-	inject_at(&debugStringLog, 0, str)
-	if (len(debugStringLog) > DEBUG_LOG_TOTAL_LIMIT) {
-		pop(&debugStringLog)
+		inject_at(&debugStringLog, 0, str)
+		if (len(debugStringLog) > DEBUG_LOG_TOTAL_LIMIT) {
+			pop(&debugStringLog)
+		}
+
+		debugTimeSinceLastLog = 0
 	}
 }
 
