@@ -62,7 +62,6 @@ SceneMainUpdate :: proc (self: ^Scene) {
 
 SceneMainDraw :: proc (self: ^Scene) {
 	r.ClearBackground(r.LIGHTGRAY)
-
 	r.BeginMode2D(game.camera) // everything drawn here gets affected by the camera 
 		r.DrawRectangleGradientV(-2000, -2000, 4000, 4000, r.SKYBLUE, r.DARKPURPLE)
 		PlayerDraw(&player)
@@ -74,6 +73,7 @@ SceneMainDraw :: proc (self: ^Scene) {
 SceneMainEnd :: proc (self: ^Scene) {
 	vUnloadTexture2d(floor.sprite.texture)
 	PlayerEnd(&player)
+	// do we need to do this ? 
 	free(&player)
 	free(&floor)
 	free(&floor2)

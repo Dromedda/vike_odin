@@ -189,6 +189,7 @@ vCheckMeetingE :: proc(a: ^Entity, b: ^Entity) -> bool {
 	return false
 }
 
+// FIX: This is kinda memory inneficient
 // creates a new entity with the offset to its position ( useful for when checking collisions )
 vCreateEntityOffset :: proc(e: Entity, xOff, yOff: i32) -> ^Entity {
 	ret := Entity {
@@ -208,7 +209,7 @@ vCreateEntityOffset :: proc(e: Entity, xOff, yOff: i32) -> ^Entity {
 // -- @Sprite Drawing -- // 
 
 // Create a drawable sprite, useful when using vDrawSprite
-vCreateSprite :: proc(txt: cstring, frame_width: f32, frame_height: f32, origin_x: f32, origin_y: f32) -> (spr: Sprite){
+vCreateSprite :: proc(txt: cstring, frame_width: f32, frame_height: f32, origin_x: f32, origin_y: f32) -> (spr: Sprite) {
 	spr.texture = vLoadTexture2d(txt)
 	spr.frame_width, spr.frame_height = frame_width, frame_height
 	spr.origin = r.Vector2{origin_x, origin_y}
@@ -241,11 +242,15 @@ vCreateAnimation :: proc(spr: Sprite, animation: i32, num_of_frames: i32, target
 	spr.target_fps[animation] = target_fps
 }
 
+
+// @NOTE I dont like the whole setters and getter ways of doing this. and that should be changed at some point.
+
 // Gets the current active sprite.. Same as spr.current_animation
 vGetCurrentAnimation :: proc(spr: ^Sprite) -> (i32) {
 	return spr.current_animation
 }
 
+// Set the current animation of a sprite
 vSetCurrentAnimation :: proc(spr: ^Sprite, anim: i32) {
 	if (spr.current_animation != anim) {
 		spr.current_frame = 0 
@@ -334,7 +339,7 @@ vDebugDrawLog :: proc() {
 				8, 
 				i32(DEBUG_LOG_CONSOLE_OFFSET+ (i * DEBUG_LOG_LINE_HEIGHT + DEBUG_LOG_LINE_OFFSET)), 
 				DEBUG_LOG_LINE_HEIGHT, 
-				r.RED)
+				r.WHITE)
 		}
 	}
 }

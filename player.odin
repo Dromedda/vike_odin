@@ -75,13 +75,13 @@ PlayerDraw :: proc(self: ^Player) {
 	vDrawSprite(self.sprite, self.x, self.y, self.sclx, self.scly, 0, r.WHITE)
 
 	// Debug Drawing
-	moveX := (i32(vkeyd(r.KeyboardKey.D)) - i32(vkeyd(r.KeyboardKey.A)))
-	moveY := (i32(vkeyd(r.KeyboardKey.S)) - i32(vkeyd(r.KeyboardKey.W)))
-
-	targetx := (self.x + 32) + (moveX * i32(self.speed)) * 10
-	targety := (self.y + 32) + (moveY * i32(self.speed)) * 10
-
 	if game.debug { 
+		moveX := (i32(vkeyd(r.KeyboardKey.D)) - i32(vkeyd(r.KeyboardKey.A)))
+		moveY := (i32(vkeyd(r.KeyboardKey.S)) - i32(vkeyd(r.KeyboardKey.W)))
+
+		targetx := (self.x + 32) + (moveX * i32(self.speed)) * 10
+		targety := (self.y + 32) + (moveY * i32(self.speed)) * 10
+
 		r.DrawLine(self.x + 32, self.y + 32, targetx, targety, r.RED)
 		vDebugRecOutline(self.x, self.y, self.w, self.h, r.RED)
 	}
