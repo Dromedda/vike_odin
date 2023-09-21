@@ -7,6 +7,7 @@ Player :: struct {
 	speed : f64,
 	sprint_multiplyer: f64,
 	holding: Item,
+	colliding: bool,
 	using entity: Entity,
 }
 
@@ -57,20 +58,23 @@ PlayerUpdate :: proc(self: ^Player) {
 	targety := (moveY * i32(self.speed))
 
 	playerCollTo := vCreateEntityOffset(self, targetx, targety)
-	if len(vGetAllCollidingEntities(playerCollTo, game.activeScene)) == 0 {
+	ents := vGetAllCollidingEntities(playerCollTo, game.activeScene)
+	if len(ents) == 0 {
 		self.x += targetx
 		self.y += targety
+		self.colliding = false
 	} else {
 		vDebugLog("Player Collided!")
+		//f.println(ents[0].name)
+		self.colliding = true 
 	}
 
 	vUpdateAnimation(&self.sprite)
 }
 
 PlayerDraw :: proc(self: ^Player) {
-	// Check Collisions
-	ents := vGetAllCollidingEntities(self, game.activeScene) 
-	if (len(ents) > 0) { r.DrawRectangle(self.x - i32(self.sprite.origin.x), self.y - i32(self.sprite.origin.y), self.w, self.h, r.RED) }
+	// draw a red rectangle around the player if it is colliding 
+	if (self.colliding) { r.DrawRectangle(self.x - i32(self.sprite.origin.x), self.y - i32(self.sprite.origin.y), self.w, self.h, r.RED) }
 
 	// Draw Self
 	vDrawSprite(self.sprite, self.x, self.y, self.sclx, self.scly, 0, r.WHITE)
